@@ -11,6 +11,9 @@ using System;
 using Innermost.Identity.API.Models;
 using Microsoft.AspNetCore.Identity;
 using System.Reflection;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace Innermost.Identity.API
 {
@@ -24,7 +27,7 @@ namespace Innermost.Identity.API
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var sqlConnectionString = Configuration.GetConnectionString("ConnectMySQL");
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
@@ -33,9 +36,22 @@ namespace Innermost.Identity.API
             services.AddDbContext<InnermostIdentityDbContext>(options => 
                 options.UseMySql(
                     sqlConnectionString,
-                    new MySqlServerVersion(new Version(5,7))
+                    new MySqlServerVersion(new Version(5,7)),
+                    sqlOptions =>
+                    {
+                        sqlOptions.MigrationsAssembly(migrationsAssembly);
+                        //Configuring Connection Resiliency: https://docs.microsoft.com/en-us/ef/core/miscellaneous/connection-resiliency 
+                        sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                    }
                 )
             );
+
+            //数据库健康检查
+            services.AddHealthChecks()
+                .AddCheck("self", ()=>HealthCheckResult.Healthy())
+                .AddMySql(sqlConnectionString,
+                    name: "IdentityDB-Check",
+                    tags: new string[] { "IdentityDB" });
 
             //添加 ASP.NET Identity
             services.AddIdentity<InnermostUser, IdentityRole>()
@@ -78,6 +94,11 @@ namespace Innermost.Identity.API
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Innermost.Identity.API", Version = "v1" });
             });
+
+            var container = new ContainerBuilder();
+            container.Populate(services);
+
+            return new AutofacServiceProvider(container.Build());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -21,7 +21,7 @@ namespace Innermost.Identity.API.Configuration
             };
         }
         /// <summary>
-        /// Get IdentityResource like userID、Profile、email
+        /// Get IdentityResource like userID、Profile、email which needs to be protected.
         /// </summary>
         /// <returns></returns>
         public static IEnumerable<IdentityResource> GetResources()
@@ -35,7 +35,7 @@ namespace Innermost.Identity.API.Configuration
         /// <summary>
         /// Clients want to access resources
         /// </summary>
-        /// <param name="clientUrls">clients' url dictionary key:clientId value:url</param>
+        /// <param name="clientUrls">clients' url dictionary key:clientId value:url.The data is in appsettings.json</param>
         /// <returns></returns>
         public static IEnumerable<Client> GetClients(Dictionary<string,string> clientUrls)
         {
