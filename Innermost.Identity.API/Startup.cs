@@ -14,6 +14,7 @@ using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Innermost.Identity.API.Services;
 
 namespace Innermost.Identity.API
 {
@@ -52,6 +53,8 @@ namespace Innermost.Identity.API
                 .AddMySql(sqlConnectionString,
                     name: "IdentityDB-Check",
                     tags: new string[] { "IdentityDB" });
+            //ÃÌº”transient“¿¿µ
+            services.AddTransient<ILoginService<InnermostUser>, InnermostLoginService>();
 
             //ÃÌº” ASP.NET Identity
             services.AddIdentity<InnermostUser, IdentityRole>()
