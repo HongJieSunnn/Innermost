@@ -31,6 +31,7 @@
   <ItemGroup>
     <Folder Include="Migrations\ConfigurationDb\" />
     <Folder Include="Migrations\PersistedDb\" />
+    <Folder Include="Factories\" />
   </ItemGroup>
 
 </Project>
