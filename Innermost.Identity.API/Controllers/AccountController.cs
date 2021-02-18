@@ -5,6 +5,7 @@ using IdentityServer4.Stores;
 using Innermost.Identity.API.Models;
 using Innermost.Identity.API.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -46,10 +47,55 @@ namespace Innermost.Identity.API.Controllers
             _userManager = userManager;
             _configuration = configuration;
         }
+        /// <summary>
+        /// Innermost 注册用户API
+        /// </summary>
+        /// <param name="model">用户注册信息</param>
+        /// <param name="returnUrl">返回的url</param>
+        /// <returns></returns>
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model,string returnUrl=null)
+        {
+            if(ModelState.IsValid)
+            {
+                var newUser = new InnermostUser
+                {
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    Age = model.User.Age,
+                    Gender = model.User.Gender,
+                    NickName = model.User.NickName,
+                    School = model.User.School,
+                    Province = model.User.Province,
+                    City = model.User.City,
+                    SelfDescription = model.User.SelfDescription,
+                    Birthday = model.User.Birthday
+                };
 
+                var createNewUserRes = await _userManager.CreateAsync(newUser, model.Password);
+                if(createNewUserRes.Errors.Count()>0)
+                {
+                    return BadRequest(await BuildErrorModelStateJsonStr(model, createNewUserRes.Errors.Select(error => error.Description)));
+                }
+            }
+
+            if(returnUrl!=null&&HttpContext.User.Identity.IsAuthenticated)//returnUrl不为空而且有用户登陆着
+            {
+                return Redirect(returnUrl);
+            }
+            //重定向到登录界面
+            return Redirect("~/Account/Login");
+        }
+        /// <summary>
+        /// 登陆
+        /// </summary>
+        /// <param name="loginModel"></param>
+        /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> LoginAsync([FromBody] LoginModel loginModel)
+        public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
             if(ModelState.IsValid)
             {
@@ -92,13 +138,24 @@ namespace Innermost.Identity.API.Controllers
                 return Unauthorized("Account or Password is invalid");//账号密码错误 401
             }
 
-            return BadRequest(await BuildErrorModelStateJsonStr(loginModel,"error model datas."));
+            return BadRequest(await BuildErrorModelStateJsonStr(loginModel,new List<string> { "error model datas." }));
         }
-
-        public Task<JObject> BuildErrorModelStateJsonStr<TModel>(TModel model, string errorMessage)
+        /// <summary>
+        /// 传入的信息json中加入错误信息
+        /// </summary>
+        /// <typeparam name="TModel"></typeparam>
+        /// <param name="model">post的请求负载对应类型的对象</param>
+        /// <param name="errorMessage">错误信息</param>
+        /// <returns></returns>
+        public Task<JObject> BuildErrorModelStateJsonStr<TModel>(TModel model, IEnumerable<string> errorMessages)
         {
             var modelJson = JObject.FromObject(model);
-            modelJson.Add("error", errorMessage);
+            JArray errorArray = new JArray();
+            foreach (var error in errorMessages)
+            {
+                errorArray.Add(error);
+            }
+            modelJson.Add("errors", errorArray);
             return Task.Run(() =>
             {
                 return modelJson;

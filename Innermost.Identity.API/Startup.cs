@@ -89,6 +89,27 @@ namespace Innermost.Identity.API
                         sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                     });
             });
+
+            //对账号密码等信息配置
+            services.Configure<IdentityOptions>(options =>
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.SignIn.RequireConfirmedEmail = true;
+                options.User.AllowedUserNameCharacters =
+                        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-_";
+                options.User.RequireUniqueEmail = true;
+            });
+
+            //配置cookie
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.Cookie.Name = "InnermostUserCookie";
+                options.LoginPath = "/Account/Login";
+            });
+
             //开发使用的证书，真正生产环境下需要像eshop项目里一样弄一个证书装进去
             builder.AddDeveloperSigningCredential();
 
