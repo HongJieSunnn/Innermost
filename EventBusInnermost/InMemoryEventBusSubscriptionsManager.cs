@@ -1,12 +1,12 @@
-﻿using EventBusInnermost.Abstractions;
-using EventBusInnermost.Events;
+﻿using Innermost.EventBusInnermost.Abstractions;
+using Innermost.EventBusInnermost.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventBusInnermost
+namespace Innermost.EventBusInnermost
 {
     /// <summary>
     /// 自定义的订阅管理者
@@ -18,6 +18,11 @@ namespace EventBusInnermost
         /// </summary>
         private readonly Dictionary<string, List<SubscriptionInfo>> _handlers;
         private readonly List<Type> _eventTypes;
+        /// <summary>
+        /// 外部传入函数，当EventRemoved，会invoke该委托，然后执行外部传入的函数从而执行Event被Removed后需要执行的某些操作。
+        /// 例如可能需要重新添加事件等操作#2021.2.20
+        /// 可看RabbitMQ连接中，它就传递了三个函数使连接关闭后继续重试连接
+        /// </summary>
         public event EventHandler<string> OnEventRemoved;
         public bool IsEmpty => !_handlers.Any();
         public void Clear() => _handlers.Clear();
@@ -28,7 +33,7 @@ namespace EventBusInnermost
             _eventTypes = new List<Type>();
         }
 
-        public void AddDynamicSubscription<TH>(string eventName) where TH : IIntegrationEventHandler
+        public void AddDynamicSubscription<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
         {
             DoAddSubscription(typeof(TH), eventName, isDynamic: true);
         }
@@ -76,7 +81,7 @@ namespace EventBusInnermost
             }
         }
 
-        public void RemoveDynamicSubScription<TH>(string eventName) where TH : IIntegrationEventHandler
+        public void RemoveDynamicSubScription<TH>(string eventName) where TH : IDynamicIntegrationEventHandler
         {
             var subscription = FindDynamicSubscriptionToRemove<TH>(eventName);
 
@@ -136,7 +141,7 @@ namespace EventBusInnermost
         /// <typeparam name="TH">handlerType</typeparam>
         /// <returns></returns>
         private SubscriptionInfo FindDynamicSubscriptionToRemove<TH>(string eventName)
-            where TH:IIntegrationEventHandler
+            where TH: IDynamicIntegrationEventHandler
         {
             return DoFindSubscriptionToRemove(eventName, typeof(TH));
         }

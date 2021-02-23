@@ -1,24 +1,25 @@
-﻿using Innermost.EventBusInnermost.Events;
+﻿using Innermost.EventBusInnermost.Abstractions;
+using Innermost.EventBusInnermost.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Innermost.EventBusInnermost.Abstractions
+namespace EventBusInnermost.Abstractions
 {
-    public interface IEventBus
+    public interface IAsyncEventBus
     {
-        void Publish(IntegrationEvent @event);
+        Task Publish(IntegrationEvent @event);
 
-        void Subscribe<T, TH>()
+        Task Subscribe<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler<T>;
 
         void SubscribeDynamic<TH>(string eventName)
             where TH : IDynamicIntegrationEventHandler;
 
-        void UnSubsribe<T, TH>()
+        Task UnSubsribe<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler;
 

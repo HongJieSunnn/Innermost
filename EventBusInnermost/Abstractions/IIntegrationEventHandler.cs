@@ -1,11 +1,11 @@
-﻿using EventBusInnermost.Events;
+﻿using Innermost.EventBusInnermost.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventBusInnermost.Abstractions
+namespace Innermost.EventBusInnermost.Abstractions
 {
     /// <summary>
     /// 事件处理者的接口，也就是订阅者。

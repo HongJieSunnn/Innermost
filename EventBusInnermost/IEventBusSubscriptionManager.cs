@@ -1,13 +1,13 @@
-﻿using EventBusInnermost.Abstractions;
-using EventBusInnermost.Events;
+﻿using Innermost.EventBusInnermost.Abstractions;
+using Innermost.EventBusInnermost.Events;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using static EventBusInnermost.InMemoryEventBusSubscriptionsManager;
+using static Innermost.EventBusInnermost.InMemoryEventBusSubscriptionsManager;
 
-namespace EventBusInnermost
+namespace Innermost.EventBusInnermost
 {
     /// <summary>
     /// 事件和订阅者的管理者接口。它只管理事件和管理者间的关系。
@@ -25,14 +25,14 @@ namespace EventBusInnermost
             where TH : IIntegrationEventHandler;
 
         void AddDynamicSubscription<TH>(string eventName)
-            where TH : IIntegrationEventHandler;
+            where TH : IDynamicIntegrationEventHandler;
 
         void RemoveSubScription<T, TH>()
             where T : IntegrationEvent
             where TH : IIntegrationEventHandler;
 
         void RemoveDynamicSubScription<TH>(string eventName)
-            where TH : IIntegrationEventHandler;
+            where TH : IDynamicIntegrationEventHandler;
 
         bool HasSubscriptionForEvent<T>() where T : IntegrationEvent;
         bool HasSubscriptionForEvent(string eventName);

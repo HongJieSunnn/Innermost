@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace EventBusInnermost.Events
+namespace Innermost.EventBusInnermost.Events
 {
     /// <summary>
     /// 事件的基类。它的子类都是事件总线可处理的事件。
