@@ -39,11 +39,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebHost.Customization", "So
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.LogLife.Domain", "Sources\Services\Innermost.LogLife\Innermost.LogLife.Domain\Innermost.LogLife.Domain.csproj", "{078603B5-47C8-4075-8E64-31C9FA136D2C}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.LogLife.Infrastructure", "Sources\Services\Innermost.LogLife\Innermost.LogLife.Infrastructure\Innermost.LogLife.Infrastructure.csproj", "{00523B06-6716-4FD6-B707-2FE02D0DB94F}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SeedWork", "SeedWork", "{0FFDCC61-04BA-4BA2-815E-EF7CC014116A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Innermost.SeedWork", "Sources\BuildingBlocks\SeedWork\Innermost.SeedWork\Innermost.SeedWork.csproj", "{04826702-5769-44EA-A962-326CB97DAB86}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.SeedWork", "Sources\BuildingBlocks\SeedWork\Innermost.SeedWork\Innermost.SeedWork.csproj", "{04826702-5769-44EA-A962-326CB97DAB86}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{BE8A4B05-B08E-44E1-B879-134C51CE5FA5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Innermost.LogLife.Infrastructure", "Sources\Services\Innermost.LogLife\Innermost.LogLife.Infrastructure\Innermost.LogLife.Infrastructure.csproj", "{3FA02F00-BAB1-4A0F-B293-55332D5C7863}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,14 +85,14 @@ Global
 		{078603B5-47C8-4075-8E64-31C9FA136D2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{078603B5-47C8-4075-8E64-31C9FA136D2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{078603B5-47C8-4075-8E64-31C9FA136D2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{00523B06-6716-4FD6-B707-2FE02D0DB94F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{00523B06-6716-4FD6-B707-2FE02D0DB94F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{00523B06-6716-4FD6-B707-2FE02D0DB94F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{00523B06-6716-4FD6-B707-2FE02D0DB94F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{04826702-5769-44EA-A962-326CB97DAB86}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{04826702-5769-44EA-A962-326CB97DAB86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04826702-5769-44EA-A962-326CB97DAB86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04826702-5769-44EA-A962-326CB97DAB86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3FA02F00-BAB1-4A0F-B293-55332D5C7863}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3FA02F00-BAB1-4A0F-B293-55332D5C7863}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3FA02F00-BAB1-4A0F-B293-55332D5C7863}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3FA02F00-BAB1-4A0F-B293-55332D5C7863}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -111,9 +113,10 @@ Global
 		{6C14D316-8F38-400A-9B10-A5D742BD8DBA} = {C9FC3DB9-A599-4C0E-B66C-1DA0130A5DE9}
 		{7DE4EFDB-64C7-4E1A-94BA-60F65456AD61} = {6C14D316-8F38-400A-9B10-A5D742BD8DBA}
 		{078603B5-47C8-4075-8E64-31C9FA136D2C} = {A9BE0AB6-B6F3-4172-AE38-3814F5E96ABA}
-		{00523B06-6716-4FD6-B707-2FE02D0DB94F} = {A9BE0AB6-B6F3-4172-AE38-3814F5E96ABA}
 		{0FFDCC61-04BA-4BA2-815E-EF7CC014116A} = {C9FC3DB9-A599-4C0E-B66C-1DA0130A5DE9}
 		{04826702-5769-44EA-A962-326CB97DAB86} = {0FFDCC61-04BA-4BA2-815E-EF7CC014116A}
+		{BE8A4B05-B08E-44E1-B879-134C51CE5FA5} = {9296F955-4982-4E4D-A962-C6A2CE67EE37}
+		{3FA02F00-BAB1-4A0F-B293-55332D5C7863} = {A9BE0AB6-B6F3-4172-AE38-3814F5E96ABA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BAF1A2BE-D10D-4674-918B-22AFECA74714}

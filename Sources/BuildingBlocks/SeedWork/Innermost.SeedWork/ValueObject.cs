@@ -9,7 +9,7 @@ namespace Innermost.SeedWork
     /// <summary>
     /// Innermost中采用DDD的服务的 值对象基类
     /// </summary>
-    public abstract class ValueObject
+    public abstract class ValueObject//TODO class to record?
     {
         protected abstract IEnumerable<object> GetEqualityComponents();
 

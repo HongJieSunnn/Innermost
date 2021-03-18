@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebHost.Customization\WebHost.Customization.csproj" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\WebHost\WebHost.Customization\WebHost.Customization.csproj" />
   </ItemGroup>
 
 </Project>
