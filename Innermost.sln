@@ -45,7 +45,21 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.SeedWork", "Sourc
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ApiGateways", "ApiGateways", "{BE8A4B05-B08E-44E1-B879-134C51CE5FA5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Innermost.LogLife.Infrastructure", "Sources\Services\Innermost.LogLife\Innermost.LogLife.Infrastructure\Innermost.LogLife.Infrastructure.csproj", "{3FA02F00-BAB1-4A0F-B293-55332D5C7863}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.LogLife.Infrastructure", "Sources\Services\Innermost.LogLife\Innermost.LogLife.Infrastructure\Innermost.LogLife.Infrastructure.csproj", "{3FA02F00-BAB1-4A0F-B293-55332D5C7863}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Innermost.Music", "Innermost.Music", "{FE27716F-B85A-45B5-B7D1-18837DA5D9A3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.Music.API", "Sources\Services\Innermost.Music\Innermost.Music.API\Innermost.Music.API.csproj", "{4A67CAEA-009E-4F6E-9FEE-F097435D5DF2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.Music.Domain", "Sources\Services\Innermost.Music\Innermost.Music.Domain\Innermost.Music.Domain.csproj", "{DE07BDEA-FED4-42FA-802E-643EC4A0BE28}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Innermost.Music.Infrastructure", "Sources\Services\Innermost.Music\Innermost.Music.Infrastructure\Innermost.Music.Infrastructure.csproj", "{2B351E89-F63E-4EAE-BB45-904B4EF5990D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{F78655F5-D3A6-496B-BF97-0A038203D6C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TypeExtensions", "Sources\BuildingBlocks\Extensions\TypeExtensions\TypeExtensions.csproj", "{88EE3A5B-B1A4-47C0-B974-F002754F3FD1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationEventRecord", "Sources\BuildingBlocks\EventBus\IntegrationEventRecord\IntegrationEventRecord.csproj", "{F12FB378-31C1-4A2D-A1C5-326F72DB817E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -93,6 +107,26 @@ Global
 		{3FA02F00-BAB1-4A0F-B293-55332D5C7863}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3FA02F00-BAB1-4A0F-B293-55332D5C7863}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3FA02F00-BAB1-4A0F-B293-55332D5C7863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A67CAEA-009E-4F6E-9FEE-F097435D5DF2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A67CAEA-009E-4F6E-9FEE-F097435D5DF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A67CAEA-009E-4F6E-9FEE-F097435D5DF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A67CAEA-009E-4F6E-9FEE-F097435D5DF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE07BDEA-FED4-42FA-802E-643EC4A0BE28}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE07BDEA-FED4-42FA-802E-643EC4A0BE28}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE07BDEA-FED4-42FA-802E-643EC4A0BE28}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE07BDEA-FED4-42FA-802E-643EC4A0BE28}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B351E89-F63E-4EAE-BB45-904B4EF5990D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B351E89-F63E-4EAE-BB45-904B4EF5990D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B351E89-F63E-4EAE-BB45-904B4EF5990D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B351E89-F63E-4EAE-BB45-904B4EF5990D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88EE3A5B-B1A4-47C0-B974-F002754F3FD1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88EE3A5B-B1A4-47C0-B974-F002754F3FD1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88EE3A5B-B1A4-47C0-B974-F002754F3FD1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88EE3A5B-B1A4-47C0-B974-F002754F3FD1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F12FB378-31C1-4A2D-A1C5-326F72DB817E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F12FB378-31C1-4A2D-A1C5-326F72DB817E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F12FB378-31C1-4A2D-A1C5-326F72DB817E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F12FB378-31C1-4A2D-A1C5-326F72DB817E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +151,13 @@ Global
 		{04826702-5769-44EA-A962-326CB97DAB86} = {0FFDCC61-04BA-4BA2-815E-EF7CC014116A}
 		{BE8A4B05-B08E-44E1-B879-134C51CE5FA5} = {9296F955-4982-4E4D-A962-C6A2CE67EE37}
 		{3FA02F00-BAB1-4A0F-B293-55332D5C7863} = {A9BE0AB6-B6F3-4172-AE38-3814F5E96ABA}
+		{FE27716F-B85A-45B5-B7D1-18837DA5D9A3} = {21C8DB59-FF09-4C36-B565-C7791659833F}
+		{4A67CAEA-009E-4F6E-9FEE-F097435D5DF2} = {FE27716F-B85A-45B5-B7D1-18837DA5D9A3}
+		{DE07BDEA-FED4-42FA-802E-643EC4A0BE28} = {FE27716F-B85A-45B5-B7D1-18837DA5D9A3}
+		{2B351E89-F63E-4EAE-BB45-904B4EF5990D} = {FE27716F-B85A-45B5-B7D1-18837DA5D9A3}
+		{F78655F5-D3A6-496B-BF97-0A038203D6C2} = {C9FC3DB9-A599-4C0E-B66C-1DA0130A5DE9}
+		{88EE3A5B-B1A4-47C0-B974-F002754F3FD1} = {F78655F5-D3A6-496B-BF97-0A038203D6C2}
+		{F12FB378-31C1-4A2D-A1C5-326F72DB817E} = {8D218656-ACD2-44E4-8FA9-7396D9553318}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BAF1A2BE-D10D-4674-918B-22AFECA74714}

@@ -14,18 +14,20 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         public string City { get; set; }
         public string County { get; set; }
         public string Town { get; set; }
+        public string Place { get; set; }
 
         public Location()
         {
 
         }
 
-        public Location(string province,string city,string county,string town)
+        public Location(string province,string city,string county,string town,string place)
         {
             Province = province;
             City = city;
             County = county;
             Town = town;
+            Place = place;
         }
 
         protected override IEnumerable<object> GetEqualityComponents()
@@ -34,6 +36,7 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             yield return City;
             yield return County;
             yield return Town;
+            yield return Place;
         }
     }
 }

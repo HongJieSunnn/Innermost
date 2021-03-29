@@ -14,8 +14,7 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         Task<LifeRecord> AddAsync(LifeRecord lifeRecord);
         LifeRecord Update(LifeRecord lifeRecord);
         LifeRecord Delete(LifeRecord lifeRecord);
-        Task<IEnumerable<LifeRecord>> FindRecordsByUserIdAsync(string userId);
-        Task<IEnumerable<LifeRecord>> FindRecordsByPathAsync(string userId,string path);
-        Task<LifeRecord> FindRecordByIdAsync(string id);
+        IEnumerable<LifeRecord> DeleteRecordsUnderPath(string path);
+        Task<LifeRecord> GetRecordByIdAsync(int id);
     }
 }

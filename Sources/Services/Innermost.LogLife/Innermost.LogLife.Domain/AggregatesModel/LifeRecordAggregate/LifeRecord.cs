@@ -13,15 +13,17 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         :Entity,IAggregateRoot
     {
         private string _userId;
-        public bool IsShared { get;private set; }
+        public string UserId { get; }
         public string Title { get; private set; }
         public string Text { get; private set; }
         public TextType TextType { get;private set; }
+        private int _textTypeId;
         public Location Location { get; private set; }
         public DateTime PublishTime { get; private set; }
         public MusicRecord MusicRecord { get;private set; }
+        private int _musicRecordId;
         //public IEnumerable<Image> Images { get; set; }//TODO
-        public IEnumerable<EmotionTag> EmotionTags { get; set; }
+        public IEnumerable<EmotionTag> EmotionTags { get;private set; }
         /// <summary>
         /// Document Path.User can customer the loglife document structrue.
         /// </summary>
@@ -39,28 +41,21 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             Text = text;
             Path = path;
             TextType=textType;
-            IsShared = isShared;
+            _textTypeId = TextType.Id;
             Location = location;
             MusicRecord = musicRecord;//TODO 也许可以某些步骤来获取当前用户正在听的歌
+            _musicRecordId = MusicRecord.Id;
             EmotionTags = emotionTags;
         }
 
         public void SetRecordShared()
         {
-            if(IsShared==false)
-            {
-                AddDomainEvent(new ToMakeRecordSharedDomainEvent(this.Id));
-                IsShared = true;
-            }
+            AddDomainEvent(new ToMakeRecordSharedDomainEvent(this.Id));
         }
 
         public void SetRecordPrivate()
         {
-            if (IsShared == true)
-            {
-                AddDomainEvent(new ToMakeRecordPrivateDomainEvent(this.Id));
-                IsShared = false;
-            }
+            //该方法应该放在分享的Record实体下。
         }
 
         public void SetEmotionTags(IEnumerable<EmotionTag> emotionTags)
@@ -68,6 +63,7 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             if(!emotionTags.EqualList(this.EmotionTags))
             {
                 AddDomainEvent(new ToChangeEmotionTagsDomainEvent(this.Id));
+                EmotionTags = emotionTags;
             }
         }
 
