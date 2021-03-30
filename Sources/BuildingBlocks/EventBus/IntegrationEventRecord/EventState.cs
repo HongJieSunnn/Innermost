@@ -19,6 +19,11 @@ namespace IntegrationEventRecord
             StateName = stateName;
         }
 
+        public static implicit operator string(EventState state)
+        {
+            return state.StateName;
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())
@@ -34,6 +39,11 @@ namespace IntegrationEventRecord
         public override int GetHashCode()
         {
             return StateName.GetHashCode();
+        }
+
+        public override string ToString()
+        {
+            return StateName;
         }
     }
 }

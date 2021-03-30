@@ -8,7 +8,7 @@ namespace Innemost.LogLife.API.Application.IntegrationEvents
 {
     public interface ILogLifeIntegrationEventService
     {
-        Task PublishEventsAsync(Guid guid);
+        Task PublishEventsAsync(Guid transactionId);
         Task AddAndSaveEventAsync(IntegrationEvent integrationEvent);
     }
 }

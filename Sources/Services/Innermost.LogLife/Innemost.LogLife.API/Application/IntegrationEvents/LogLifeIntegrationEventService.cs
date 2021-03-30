@@ -26,7 +26,7 @@ namespace Innemost.LogLife.API.Application.IntegrationEvents
             throw new NotImplementedException();
         }
 
-        public async Task PublishEventsAsync(Guid guid)
+        public async Task PublishEventsAsync(Guid transactionId)
         {
             throw new NotImplementedException();
         }

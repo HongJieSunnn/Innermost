@@ -14,10 +14,10 @@ namespace IntegrationEventRecord
         public Guid EventId { get;private set; }
         public string TransactionId { get;private set; }
         public string EventTypeName { get;private set; }
-        public EventState EventState { get;private set; }
+        public string State { get; set; }
         public DateTime CreateTime { get; private set; }
         public string EventContent { get;private set; }
-        public int TimesSend { get;private set; }//发送的次数，当该事件已在处理而又发送则TimesSend++
+        public int TimesSend { get; set; }//发送的次数，当该事件已在处理而又发送则TimesSend++
         [NotMapped]
         public string EventTypeShortName => EventTypeName.Split(".").Last();//去掉了名称空间的名
         [NotMapped]
@@ -30,15 +30,15 @@ namespace IntegrationEventRecord
             EventId = @event.Id;
             TransactionId = transactionId.ToString();
             EventTypeName = @event.GetType().FullName;
-            EventState = EventState.NotPublished;
+            State = EventState.NotPublished;
             CreateTime = @event.CreationDate;
             EventContent = JsonConvert.SerializeObject(@event);
             TimesSend = 0;
         }
 
-        public IntegrationEventRecord DeserializeIntegrationEventFromEventContent()
+        public IntegrationEventRecord DeserializeIntegrationEventFromEventContent(Type type)
         {
-            IntegrationEvent = JsonConvert.DeserializeObject<IntegrationEvent>(EventContent);
+            IntegrationEvent = JsonConvert.DeserializeObject(EventContent,type) as IntegrationEvent;
             return this;
         }
     }
