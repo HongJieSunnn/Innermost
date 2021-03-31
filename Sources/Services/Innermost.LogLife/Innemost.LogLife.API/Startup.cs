@@ -6,6 +6,7 @@ using Innermost.EventBusInnermost;
 using Innermost.EventBusInnermost.Abstractions;
 using Innermost.EventBusServiceBus;
 using Innermost.LogLife.Infrastructure;
+using IntegrationEventRecord.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -130,6 +131,18 @@ namespace Innemost.LogLife.API
                          });
                 });
 
+            services
+                .AddDbContext<LifeRecordDbContext>(options =>
+                {
+                    options
+                        .UseMySql(configuration["ConnectMySQL"], new MySqlServerVersion(new Version(5, 7)), options =>
+                        {
+                            options.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+
+                            options.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        });
+                });
+
             //TODO redis/mongodb/log
 
             return services;
@@ -138,6 +151,8 @@ namespace Innemost.LogLife.API
         public static IServiceCollection AddCustomIntegrationEventConfiguration(this IServiceCollection services,IConfiguration configuration)
         {
             //TODO
+            services.AddTransient<IntegrationEventRecordServiceFactory>(); 
+
             services.AddSingleton<IServiceBusPersisterConnection>(sp =>
             {
                 var connectionString = configuration["ConnectAzureServiceBus"];
