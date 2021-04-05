@@ -13,7 +13,7 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         :Entity,IAggregateRoot
     {
         private string _userId;
-        public string UserId { get; }
+        public string UserId => _userId;
         public string Title { get; private set; }
         public string Text { get; private set; }
         public TextType TextType { get;private set; }
@@ -28,6 +28,8 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         /// Document Path.User can customer the loglife document structrue.
         /// </summary>
         public string Path { get;private set; }
+
+        private bool _isShared;
 
         protected LifeRecord()
         {
@@ -46,16 +48,29 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             MusicRecord = musicRecord;//TODO 也许可以某些步骤来获取当前用户正在听的歌
             _musicRecordId = MusicRecord.Id;
             EmotionTags = emotionTags;
+            _isShared = false;
+            if(isShared)
+            {
+                SetRecordShared();
+            }
         }
 
         public void SetRecordShared()
         {
-            AddDomainEvent(new ToMakeRecordSharedDomainEvent(this.Id));
+            if(!_isShared)
+            {
+                AddDomainEvent(new ToMakeRecordSharedDomainEvent(this.Id));
+                _isShared = true;
+            }
         }
 
         public void SetRecordPrivate()
         {
-            //该方法应该放在分享的Record实体下。
+            if(_isShared)
+            {
+                AddDomainEvent(new ToMakeRecordPrivateDomainEvent(this.Id));
+                _isShared = false;
+            }
         }
 
         public void SetEmotionTags(IEnumerable<EmotionTag> emotionTags)

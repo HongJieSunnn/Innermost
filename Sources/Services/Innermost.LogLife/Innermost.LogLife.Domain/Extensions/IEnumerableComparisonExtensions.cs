@@ -11,9 +11,10 @@ namespace Innermost.LogLife.Domain.Extensions
     {
         public static bool EqualList<T>(this IEnumerable<T> list1,IEnumerable<T> list2) where T:Enumeration
         {
+            var setOfList2 = list2.ToHashSet();
             foreach(T ele in list1)
             {
-                if(!list2.Contains(ele))
+                if(!setOfList2.Contains(ele))
                 {
                     return false;
                 }

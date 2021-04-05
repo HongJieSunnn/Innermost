@@ -25,8 +25,8 @@
 
   <ItemGroup>
     <Folder Include="Application\Commands\" />
-    <Folder Include="Application\DomainEventHandlers\" />
     <Folder Include="Application\IntegrationEventHandlers\" />
+    <Folder Include="Application\CommandHandlers\" />
     <Folder Include="Controllers\" />
     <Folder Include="Infrastructure\Factories\" />
     <Folder Include="Infrastructure\Migrations\" />

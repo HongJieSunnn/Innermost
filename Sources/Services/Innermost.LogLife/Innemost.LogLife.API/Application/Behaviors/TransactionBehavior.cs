@@ -41,7 +41,8 @@ namespace Innemost.LogLife.API.Application.Behaviors
                 await stragegy.ExecuteAsync(async () =>
                 {
                     Guid transactionId;
-
+                    //当通过dispatchdomainevents方法来publish一系列的领域事件时，每个事件都会触发该behavior
+                    //但是由于同时只能存在一个事务，所以虽然每个都BeginTransaction但实际上有些是获得的_currentTransaction，所以一个transactionId可能有多个事件需要处理
                     using (var transaction =await _dbContext.BeginTransactionAsync())
                     using (LogContext.PushProperty("TransactionContext",transaction.TransactionId))
                     {

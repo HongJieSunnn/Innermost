@@ -56,6 +56,12 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
                 .IsRequired();
 
             builder
+                .Property("_isShared")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("IsShared")
+                .IsRequired();
+
+            builder
                 .Property<int>("_textTypeId")
                 .UsePropertyAccessMode(PropertyAccessMode.Field)
                 .HasColumnName("TextTypeId")
