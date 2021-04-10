@@ -2,18 +2,23 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>efa555e5-923d-4348-a51a-bece41b1433f</UserSecretsId>
+    <UserSecretsId>8c734eda-ef77-4763-b68c-cb68fd62d2de</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..\..\..</DockerfileContext>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="Controllers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BuildingBlocks\EventBus\EventBusInnermost\EventBusInnermost.csproj" />
+    <ProjectReference Include="..\..\Innermost.LogLife\Innemost.LogLife.API\Innemost.LogLife.API.csproj" />
   </ItemGroup>
 
 </Project>

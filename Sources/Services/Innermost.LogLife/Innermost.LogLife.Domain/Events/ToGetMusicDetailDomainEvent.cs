@@ -11,9 +11,21 @@ namespace Innermost.LogLife.Domain.Events
         :INotification
     {
         public int MusicId { get;private set; }
+        public MusicDetail MusicDetail { get; set; }
         public ToGetMusicDetailDomainEvent(int musicId)
         {
             MusicId = musicId;
         }
+    }
+
+    public record MusicDetail
+    {
+        public string Introduction { get; }
+
+        public string ReleaseTime { get; }
+
+        public List<string> Tags { get; }
+
+        //TODO SharedLifeRecordDTO
     }
 }

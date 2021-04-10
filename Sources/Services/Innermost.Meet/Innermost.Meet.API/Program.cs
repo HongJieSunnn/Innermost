@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Innermost.Music.API
+namespace Innermost.Meet.API
 {
     public class Program
     {

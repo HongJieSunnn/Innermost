@@ -2,9 +2,12 @@ using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EventBusInnermost.Abstractions;
 using Innemost.LogLife.API.Infrastructure.Filters;
+using Innemost.LogLife.API.Services.GprcServices;
 using Innermost.EventBusInnermost;
 using Innermost.EventBusInnermost.Abstractions;
 using Innermost.EventBusServiceBus;
+using Innermost.GrpcMusicHub;
+using Innermost.LogLife.Domain.Events;
 using Innermost.LogLife.Infrastructure;
 using IntegrationEventRecord.Services;
 using Microsoft.AspNetCore.Builder;
@@ -49,7 +52,9 @@ namespace Innemost.LogLife.API
                 .AddCustomDbContext(Configuration)
                 .AddCustomEventBus(Configuration)
                 .AddCustomIntegrationEventConfiguration(Configuration)
-                .AddCustomAuthentication(Configuration);
+                .AddCustomAuthentication(Configuration)
+                .AddGrpcServices(Configuration)
+                .AddCustomAutoMapper(Configuration);
 
 
             services.AddSwaggerGen(c =>
@@ -194,6 +199,30 @@ namespace Innemost.LogLife.API
                     options.Authority = identityServerUrl;
                     options.Audience = "LogLife";
                 });
+
+            return services;
+        }
+
+        public static IServiceCollection AddGrpcServices(this IServiceCollection service,IConfiguration configuration)
+        {
+            service.AddScoped<IMusicHubGrpcService, MusicHubGrpcService>();
+
+            service.AddGrpcClient<MusicHubGrpc.MusicHubGrpcClient>((services,options)=>
+            {
+                options.Address = new Uri("");//TODO
+            });
+
+            return service;
+        }
+
+        public static IServiceCollection AddCustomAutoMapper(this IServiceCollection services,IConfiguration configuration)
+        {
+            services.AddAutoMapper(options =>
+            {
+                options.AddMaps(new Type[] { typeof(MusicDetailDTO), typeof(MusicDetail) });
+
+                options.CreateMap<MusicDetailDTO, MusicDetail>();
+            });
 
             return services;
         }

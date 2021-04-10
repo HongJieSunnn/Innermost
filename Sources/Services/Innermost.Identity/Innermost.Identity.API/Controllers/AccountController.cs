@@ -162,7 +162,7 @@ namespace Innermost.Identity.API.Controllers
             });
         }
         /// <summary>
-        /// 当登出时，IdentityServer应该会默认调用该函数,并带上logoutId
+        /// 当通过 end session point 来登出时，IdentityServer应该会默认调用该函数,并带上logoutId。see https://stackoverflow.com/questions/49113792/identityserver4-logout
         /// </summary>
         /// <param name="logoutId">IdentityServer给的</param>
         /// <returns></returns>

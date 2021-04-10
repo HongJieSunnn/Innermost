@@ -26,7 +26,7 @@ namespace Innermost.LogLife.Infrastructure.Idempotency
                     Time = DateTime.UtcNow
                 };
 
-            _db.Add(request);
+            _db.ClientRequests.Add(request);
 
             await _db.SaveChangesAsync();
         }

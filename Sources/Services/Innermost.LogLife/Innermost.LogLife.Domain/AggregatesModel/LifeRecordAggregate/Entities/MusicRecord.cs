@@ -1,4 +1,5 @@
 ﻿using Innermost.LogLife.Domain.Events;
+using Innermost.MusicHub.Domain.AggregateModels.Music.Entities;
 using Innermost.SeedWork;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,9 @@ using System.Threading.Tasks;
 
 namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
 {
+    /// <summary>
+    /// we get music record in front-end when we create a record.
+    /// </summary>
     public class MusicRecord
         : Entity
     {
@@ -22,10 +26,14 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             Singer = singer;
             Album = album;
         }
-
-        public void GetMusicDetail()
+        /// <summary>
+        /// when we want a music detail like story of music and so on we call this method.
+        /// </summary>
+        public Music GetMusicDetail()
         {
-            AddDomainEvent(new ToGetMusicDetailDomainEvent(Id));//TODO 发送该领域事件，发出集成事件去Innermost.Music获得数据。然后Innermost.Music处理后也发送一个集成事件让ReceiveMusicDetailHandler来处理。
+            var toGetMusicDetailDomainEvent = new ToGetMusicDetailDomainEvent(Id);
+            AddDomainEvent(toGetMusicDetailDomainEvent);//TODO 发送该领域事件，通过gRPC获得详情，放在ToGetMusicDetailDomainEvent里
+            return toGetMusicDetailDomainEvent.MusicDetail ?? throw new NullReferenceException(nameof(toGetMusicDetailDomainEvent.MusicDetail));
         }
     }
 }

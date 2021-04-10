@@ -28,6 +28,7 @@ namespace Innemost.LogLife.API.Application.DomainEventHandlers.ToChangeEmotionTa
         {
             var record = await _lifeRecordRepository.GetRecordByIdAsync(notification.RecordId);
             //TODO 保存数据库更改？或者一些更改了标签后的其它操作。
+            await _lifeRecordRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
         }
     }
 }

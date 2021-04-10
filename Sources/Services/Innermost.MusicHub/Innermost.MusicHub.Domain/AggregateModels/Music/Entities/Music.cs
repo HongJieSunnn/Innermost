@@ -5,11 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Innermost.Music.Domain.AggregatesModel.MusicAggregate.Entities
+namespace Innermost.MusicHub.Domain.AggregateModels.Music.Entities
 {
     public class Music
         :Entity
     {
-
     }
 }
