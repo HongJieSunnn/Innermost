@@ -11,7 +11,7 @@ namespace Innemost.LogLife.API.Models
         public const string FindByYear = "FindByYear";
         public const string FindByMonth = "FindByMonth";
         public const string FindByDay = "FindByDay";
-        public const string FindByRangeDay = "FindByRangeDay";
+        public const string FindByRangeDay = "FindByRangeDay";//TODO To be used
         /// <summary>
         /// 通过查询的类型（查整年、某个月、某天、某几天(TODO)）来调用对应的函数。
         /// </summary>
@@ -23,6 +23,7 @@ namespace Innemost.LogLife.API.Models
         public string Month { get; init; }
         [RegularExpression(@"(0[1-9]|[1-2][0-9]|3[0-1])")]
         public string Day { get; init; }
+        [Required]
         public string FindType { get; init; }
         public static IEnumerable<string> AllowedFindTypes => new List<string>() { FindByYear, FindByMonth, FindByDay };
         public DateTimeToFind(string year,string month,string day,string findType)
@@ -33,8 +34,8 @@ namespace Innemost.LogLife.API.Models
             FindType = AllowedFindTypes.Contains(findType)?findType:throw new ArgumentException($"find-type {findType} is not allowed");
 
             _getTimePairDitionary.Add(FindByYear, GetStartAndEndTimePairYearType);
-            _getTimePairDitionary.Add(FindByYear, GetStartAndEndTimePairMonthType);
-            _getTimePairDitionary.Add(FindByYear, GetStartAndEndTimePairDayType);
+            _getTimePairDitionary.Add(FindByMonth, GetStartAndEndTimePairMonthType);
+            _getTimePairDitionary.Add(FindByDay, GetStartAndEndTimePairDayType);
         }
         /// <summary>
         /// 通过查询的类型来决定起始时间以及结束时间来模糊查询

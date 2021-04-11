@@ -1,12 +1,14 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EventBusInnermost.Abstractions;
+using Innemost.LogLife.API.Application.Commands;
 using Innemost.LogLife.API.Infrastructure.Filters;
 using Innemost.LogLife.API.Services.GprcServices;
 using Innermost.EventBusInnermost;
 using Innermost.EventBusInnermost.Abstractions;
 using Innermost.EventBusServiceBus;
 using Innermost.GrpcMusicHub;
+using Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate;
 using Innermost.LogLife.Domain.Events;
 using Innermost.LogLife.Infrastructure;
 using IntegrationEventRecord.Services;
@@ -222,6 +224,13 @@ namespace Innemost.LogLife.API
                 options.AddMaps(new Type[] { typeof(MusicDetailDTO), typeof(MusicDetail) });
 
                 options.CreateMap<MusicDetailDTO, MusicDetail>();
+
+                options.CreateMap<CreateOneRecordCommand, LifeRecord>()
+                        .ForMember(dest => dest.TextType, options => options.MapFrom(src => TextType.GetFromId(src.TextType)))
+                        .ForMember(dest => dest.Location, options => options.MapFrom(src => new Location(src.Province, src.City, src.County, src.Town, src.Place)))
+                        .ForMember(dest => dest.PublishTime, options => options.MapFrom(src => DateTime.Parse(src.PublishTime)))
+                        .ForMember(dest => dest.MusicRecord, options => options.MapFrom(src => new MusicRecord(src.MusicName, src.Singer, src.Album) { Id = src.MusicId }))
+                        .ForMember(dest => dest.EmotionTags, options => options.MapFrom(src => src.EmotionTags.Select(e => EmotionTag.GetFromName(e))));
             });
 
             return services;

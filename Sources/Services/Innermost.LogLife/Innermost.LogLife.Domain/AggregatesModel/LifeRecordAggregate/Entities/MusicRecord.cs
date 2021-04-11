@@ -1,5 +1,4 @@
 ﻿using Innermost.LogLife.Domain.Events;
-using Innermost.MusicHub.Domain.AggregateModels.Music.Entities;
 using Innermost.SeedWork;
 using System;
 using System.Collections.Generic;
@@ -29,7 +28,7 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         /// <summary>
         /// when we want a music detail like story of music and so on we call this method.
         /// </summary>
-        public Music GetMusicDetail()
+        public MusicDetail GetMusicDetail()
         {
             var toGetMusicDetailDomainEvent = new ToGetMusicDetailDomainEvent(Id);
             AddDomainEvent(toGetMusicDetailDomainEvent);//TODO 发送该领域事件，通过gRPC获得详情，放在ToGetMusicDetailDomainEvent里

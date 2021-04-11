@@ -34,7 +34,6 @@
 
   <ItemGroup>
     <Folder Include="Application\IntegrationEventHandlers\" />
-    <Folder Include="Application\CommandHandlers\" />
     <Folder Include="Infrastructure\Factories\" />
     <Folder Include="Infrastructure\Migrations\" />
     <Folder Include="Infrastructure\DbContextSeeds\" />

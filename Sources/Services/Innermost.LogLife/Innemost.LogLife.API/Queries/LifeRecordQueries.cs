@@ -1,4 +1,4 @@
-﻿using Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate;
+﻿
 using MySqlConnector;
 using Dapper;
 using System;
@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Innemost.LogLife.API.Models;
+using Innemost.LogLife.API.Queries.Model;
 
 namespace Innemost.LogLife.API.Queries
 {
@@ -17,7 +18,44 @@ namespace Innemost.LogLife.API.Queries
         {
             _connectionString = string.IsNullOrWhiteSpace(connectionString) ? connectionString : throw new ArgumentNullException(nameof(connectionString));
         }
-        public Task<IEnumerable<LifeRecord>> FindRecordsByEmotionTags(string userId, IEnumerable<int> emotionTagIds)
+
+        public async Task<IEnumerable<string>> FindPathsOfUserByUserId(string userId)
+        {
+            using (var connection=new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var paths = await connection.QueryAsync<string>(
+                    @"SELECT l.Path
+                        FROM LifeRecord l
+                        WHERE l.UserId=@userId"
+                    , new { userId = userId });
+
+                return paths;
+            }
+        }
+
+        public async Task<LifeRecord> FindRecordByRecordId(int id)
+        {
+            using (var connection=new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var recordTask=connection.QueryFirstOrDefaultAsync<LifeRecord>(
+                    @"SELECT l.id,l.Title,l.Text,l.TextTypeId,
+                        l.Location_Province,l.Location_City,l.Location_County,l.Location_Town,l.Location_Place,
+                        l.PublishTime,l.MusicRecordId
+                        FROM LifeRecord l
+                        WHERE l.id=@id"
+                    , new { id=id }
+                    );
+                //TODO
+                var record = await recordTask;
+                return record;
+            }
+        }
+
+        public Task<IEnumerable<LifeRecord>> FindRecordsByEmotionTagsAsync(string userId, IEnumerable<int> emotionTagIds)
         {
             //TODO 将标签系统放到Redis中
             //using (var conn=new MySqlConnection(_connectionString))
@@ -50,7 +88,7 @@ namespace Innemost.LogLife.API.Queries
             {
                 connection.Open();
 
-                var records= await connection.QueryAsync<LifeRecord>(
+                var recordsTask= connection.QueryAsync<LifeRecord>(
                     @"SELECT l.id,l.Title,l.Text,l.TextTypeId,
                         l.Location_Province,l.Location_City,l.Location_County,l.Location_Town,l.Location_Place,
                         l.PublishTime,l.MusicRecordId
@@ -59,11 +97,12 @@ namespace Innemost.LogLife.API.Queries
                     , new {path=path,userId=userId}
                     );
                 //TODO 去Redis找EmotionTags、去MongoDB找图片
+                var records = await recordsTask;
                 return records;
             }
         }
 
-        public async Task<IEnumerable<LifeRecord>> FindRecordsByPublishTime(string userId, DateTimeToFind dateTime)
+        public async Task<IEnumerable<LifeRecord>> FindRecordsByPublishTimeAsync(string userId, DateTimeToFind dateTime)
         {
             var timePair = dateTime.GetStartAndEndTimePair();
             var startTime = timePair.Item1.ToString("yyyy-MM-dd hh:mm:ss");
@@ -105,6 +144,23 @@ namespace Innemost.LogLife.API.Queries
                 var records = recordsBeforeGrouping.GroupBy(l => l.Path);
 
                 return records;
+            }
+        }
+
+        public async Task<bool> IsPathExistedAsync(string userId, string path)
+        {
+            using (var connection=new MySqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var pathExisted =await connection.QueryFirstOrDefaultAsync<int?>(
+                    @"SELECT 1 
+                        FROM LifeRecord l 
+                        WHERE l.Path=@path 
+                        And UserId=@userId"
+                    , new { path = path, userId = userId });
+
+                return pathExisted.HasValue?true:false;
             }
         }
     }
