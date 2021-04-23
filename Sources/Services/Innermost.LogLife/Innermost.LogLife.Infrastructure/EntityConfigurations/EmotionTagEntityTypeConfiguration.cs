@@ -15,7 +15,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<EmotionTag> builder)
         {
-            builder.ToTable("EmotionTag", LifeRecordDbContext.SCHEMA);
+            builder.ToTable("EmotionTag");
 
             builder.HasKey(e => new { e.Id, e.LifeRecordId });
 
@@ -33,12 +33,6 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
             builder
                 .Property(e => e.EmotionEmoji)
                 .HasCharSet(CharSet.Utf8Mb4)
-                .IsRequired();
-
-            builder
-                .HasOne(e => e.LifeRecord)
-                .WithMany()
-                .HasForeignKey(e=>e.LifeRecordId)
                 .IsRequired();
         }
     }

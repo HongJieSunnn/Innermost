@@ -15,8 +15,6 @@ namespace Innemost.LogLife.API.Application.Commands
         /// [DataMember] ensure converter can convert private property
         /// </summary>
         [DataMember]
-        public string UserId { get; private set; }
-        [DataMember]
         public string Title { get; private set; }
         [DataMember]
         public string Text { get; private set; }
@@ -54,11 +52,10 @@ namespace Innemost.LogLife.API.Application.Commands
             EmotionTags = new List<string>();
         }
 
-        public CreateOneRecordCommand(string userId, string title, string text, int textType, bool isShared , string path ,
+        public CreateOneRecordCommand(string title, string text, int textType, bool isShared , string path ,
             string province,string city,string county,string town,string place,string publishTime,
             int musicId,string musicName,string singer,string album,IEnumerable<string> emotionTags):this()
         {
-            UserId = userId;
             Title = title;
             Text = text;
             Path = path;

@@ -26,7 +26,7 @@ namespace Innemost.LogLife.API.Application.CommandHandlers
 
         public async Task<bool> Handle(CreateOneRecordCommand request, CancellationToken cancellationToken)
         {
-            var record = _mapper.Map<LifeRecord>(request);
+            var record = _mapper.Map<CreateOneRecordCommand,LifeRecord>(request);
 
             _logger.LogInformation("Create Record {@LifeRecord}", record);
 

@@ -14,7 +14,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<MusicRecord> builder)
         {
-            builder.ToTable("MusicRecord", LifeRecordDbContext.SCHEMA);
+            builder.ToTable("MusicRecord");
 
             builder.Ignore(e => e.DomainEvents);
 

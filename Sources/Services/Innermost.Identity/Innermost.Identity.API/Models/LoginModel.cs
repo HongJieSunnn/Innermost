@@ -14,7 +14,7 @@ namespace Innermost.Identity.API.Models
         [MaxLength(25,ErrorMessage = "password's length must less than 25")]
         public string PassWord { get; set; }
         [Required]
-        [RegularExpression(@"[Email|UserName]",ErrorMessage ="Account type must be Email or UserName")]
+        [RegularExpression(@"^Email|UserName$",ErrorMessage ="Account type must be Email or UserName")]
         public string AccountType { get; set; }
         public bool RememberMe { get; set; }
         public string ReturnUrl { get; set; }

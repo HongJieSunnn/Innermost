@@ -14,7 +14,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<TextType> builder)
         {
-            builder.ToTable("TextType", LifeRecordDbContext.SCHEMA);
+            builder.ToTable("TextType");
 
             builder.HasKey(t =>t.Id);
 

@@ -31,7 +31,7 @@ namespace Innemost.LogLife.API.Application.Commands
             }
             else
             {
-                await _requestManager.CreateRequestForCommandAsync<TCommand>(request.Id);
+                await _requestManager.CreateRequestForCommandAsync<TCommand>(request.Id);//store this request id in database to ensure request is unique.
                 try
                 {
                     var command = request.Command;

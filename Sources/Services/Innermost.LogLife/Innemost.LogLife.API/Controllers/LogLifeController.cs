@@ -137,7 +137,7 @@ namespace Innemost.LogLife.API.Controllers
             }
 
             if (!commandResult)
-                return BadRequest();
+                return BadRequest("Record can not update ID,PublishTime,Path by api \"update\" ");
 
             return Ok();
         }
@@ -160,7 +160,7 @@ namespace Innemost.LogLife.API.Controllers
             }
 
             if (!commandResult)
-                return BadRequest();
+                return BadRequest($"Record with Id {recordId} is not existed.");
 
             return Ok();
         }

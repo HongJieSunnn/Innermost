@@ -53,9 +53,10 @@ namespace Innermost.Identity.API.Controllers
         /// <param name="model">用户注册信息</param>
         /// <param name="returnUrl">返回的url</param>
         /// <returns></returns>
+        [Route("Register")]
         [HttpPost]
         [AllowAnonymous]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Register([FromBody] RegisterModel model,string returnUrl=null)
         {
             if(ModelState.IsValid)
@@ -93,8 +94,9 @@ namespace Innermost.Identity.API.Controllers
         /// </summary>
         /// <param name="loginModel"></param>
         /// <returns></returns>
+        [Route("Login")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([FromBody] LoginModel loginModel)
         {
             if(ModelState.IsValid)
@@ -166,6 +168,7 @@ namespace Innermost.Identity.API.Controllers
         /// </summary>
         /// <param name="logoutId">IdentityServer给的</param>
         /// <returns></returns>
+        [Route("Logout")]
         [HttpGet]
         public async Task<IActionResult> Logout(string logoutId)
         {
@@ -187,8 +190,9 @@ namespace Innermost.Identity.API.Controllers
         /// </summary>
         /// <param name="model"></param>
         /// <returns></returns>
+        [Route("Logout")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        //[ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout(LogoutModel model)
         {
             var idp = User?.FindFirst(JwtClaimTypes.IdentityProvider)?.Value;

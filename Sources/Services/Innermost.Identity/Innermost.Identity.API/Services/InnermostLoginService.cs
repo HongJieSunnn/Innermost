@@ -23,9 +23,9 @@ namespace Innermost.Identity.API.Services
 
         public async Task<InnermostUser> FindByAccount(string account, string type)
         {
-            if (type == "Email")
+            if (type == "UserName")
                 return await _userManager.FindByNameAsync(account);
-            else if (type == "UserName")
+            else if (type == "Email")
                 return await _userManager.FindByEmailAsync(account);
             throw new ArgumentException("Type param must be Email or UserName");
         }

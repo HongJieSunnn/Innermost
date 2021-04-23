@@ -14,7 +14,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<ClientRequest> builder)
         {
-            builder.ToTable("ClientRequest", LifeRecordDbContext.SCHEMA);
+            builder.ToTable("ClientRequest");
 
             builder.HasKey(c => c.Id);
 

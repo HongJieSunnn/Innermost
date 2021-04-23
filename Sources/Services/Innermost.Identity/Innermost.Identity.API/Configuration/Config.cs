@@ -48,9 +48,9 @@ namespace Innermost.Identity.API.Configuration
                     AllowedGrantTypes=GrantTypes.Implicit,
                     AllowAccessTokensViaBrowser=true,
                     RequireConsent=false,//needn't consent screen (consent what profile you agree to be accessed)
-                    RedirectUris={ $"{clientUrls["webapp"]}/"},
-                    PostLogoutRedirectUris={$"{clientUrls["webapp"]}/"},
-                    AllowedCorsOrigins={$"{clientUrls["webapp"]}"},
+                    RedirectUris={ $"{clientUrls["WebApp"]}/"},
+                    PostLogoutRedirectUris={$"{clientUrls["WebApp"]}/"},
+                    AllowedCorsOrigins={$"{clientUrls["WebApp"]}"},
                     AllowedScopes=
                     {
                         IdentityServerConstants.StandardScopes.OpenId,
@@ -72,8 +72,8 @@ namespace Innermost.Identity.API.Configuration
                     IdentityTokenLifetime=60*60*2,
                     RequireConsent=false,
                     RequirePkce=true,
-                    RedirectUris = { clientUrls["mobile"] },
-                    PostLogoutRedirectUris = { clientUrls["mobile"] },
+                    RedirectUris = { clientUrls["MobileApp"] },
+                    PostLogoutRedirectUris = { clientUrls["MobileApp"] },
                     AllowedScopes = new List<string>
                     {
                         IdentityServerConstants.StandardScopes.OpenId,

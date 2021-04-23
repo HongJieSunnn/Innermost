@@ -18,7 +18,6 @@ namespace Innermost.LogLife.Infrastructure
 {
     public class LifeRecordDbContext : DbContext, IUnitOfWork
     {
-        public const string SCHEMA = "Innermost.LifeRecord";
         public DbSet<LifeRecord> LifeRecords { get; set; }
         public DbSet<TextType> TextTypes { get; set; }
         public DbSet<EmotionTag> EmotionTags { get; set; }
@@ -38,6 +37,14 @@ namespace Innermost.LogLife.Infrastructure
             modelBuilder.ApplyConfiguration(new TextTypeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new EmotionTagEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
+        }
+        /// <summary>
+        /// Used for factory
+        /// </summary>
+        /// <param name="options"></param>
+        public LifeRecordDbContext(DbContextOptions<LifeRecordDbContext> options):base(options)
+        {
+
         }
 
         public LifeRecordDbContext(DbContextOptions<LifeRecordDbContext> options,IMediator mediatR):base(options)

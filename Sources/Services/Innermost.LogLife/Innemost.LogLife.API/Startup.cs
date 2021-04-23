@@ -1,9 +1,16 @@
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using EventBusInnermost.Abstractions;
+using HealthChecks.UI.Client;
 using Innemost.LogLife.API.Application.Commands;
+using Innemost.LogLife.API.Application.IntegrationEvents;
+using Innemost.LogLife.API.Application.IntegrationEvents.ToMakeRecordPrivate;
+using Innemost.LogLife.API.Application.IntegrationEvents.ToMakeRecordShared;
+using Innemost.LogLife.API.Infrastructure.AutofacModules;
 using Innemost.LogLife.API.Infrastructure.Filters;
+using Innemost.LogLife.API.Queries;
 using Innemost.LogLife.API.Services.GprcServices;
+using Innemost.LogLife.API.Services.IdentityServices;
 using Innermost.EventBusInnermost;
 using Innermost.EventBusInnermost.Abstractions;
 using Innermost.EventBusServiceBus;
@@ -11,9 +18,12 @@ using Innermost.GrpcMusicHub;
 using Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate;
 using Innermost.LogLife.Domain.Events;
 using Innermost.LogLife.Infrastructure;
+using Innermost.LogLife.Infrastructure.Idempotency;
+using Innermost.LogLife.Infrastructure.Repositories;
 using IntegrationEventRecord.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -56,17 +66,21 @@ namespace Innemost.LogLife.API
                 .AddCustomIntegrationEventConfiguration(Configuration)
                 .AddCustomAuthentication(Configuration)
                 .AddGrpcServices(Configuration)
-                .AddCustomAutoMapper(Configuration);
+                .AddCustomAutoMapper(Configuration)
+                .AddQueriesAndRepositories(Configuration)
+                .AddCustomConfig(Configuration);
 
 
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "Innemost.LogLife.API", Version = "v1" });
+                c.CustomSchemaIds(t => t.FullName);
             });
 
             var container = new ContainerBuilder();
 
             container.Populate(services);
+            container.RegisterModule<MediatRModules>();
 
             return new AutofacServiceProvider(container.Build());
         }
@@ -90,13 +104,33 @@ namespace Innemost.LogLife.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapHealthChecks("/health", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
+                {
+                    Predicate=_=>true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/health/database", new Microsoft.AspNetCore.Diagnostics.HealthChecks.HealthCheckOptions()
+                {
+                    Predicate=r=>r.Name=="loglife"
+                });
             });
+
+            ConfigureEventBus(app);
         }
 
         private void ConfigureAuth(IApplicationBuilder app)
         {
             app.UseAuthentication();
             app.UseAuthorization();
+        }
+
+        private void ConfigureEventBus(IApplicationBuilder app)
+        {
+            var eventBus = app.ApplicationServices.GetRequiredService<IAsyncEventBus>();
+
+            eventBus.Subscribe<ToMakeRecordPrivateIntegrationEvent, IIntegrationEventHandler<ToMakeRecordPrivateIntegrationEvent>>();
+            eventBus.Subscribe<ToMakeRecordSharedIntegrationEvent, IIntegrationEventHandler<ToMakeRecordSharedIntegrationEvent>>();
         }
     }
 
@@ -130,19 +164,7 @@ namespace Innemost.LogLife.API
                 .AddDbContext<LifeRecordDbContext>(options =>
                 {
                     options
-                        .UseMySql(configuration["ConnectMySQL"], new MySqlServerVersion(new Version(5, 7)), options =>
-                         {
-                             options.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
-
-                             options.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                         });
-                });
-
-            services
-                .AddDbContext<LifeRecordDbContext>(options =>
-                {
-                    options
-                        .UseMySql(configuration["ConnectMySQL"], new MySqlServerVersion(new Version(5, 7)), options =>
+                        .UseMySql(configuration.GetConnectionString("ConnectMySQL"), new MySqlServerVersion(new Version(5, 7)), options =>
                         {
                             options.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
 
@@ -157,12 +179,12 @@ namespace Innemost.LogLife.API
 
         public static IServiceCollection AddCustomIntegrationEventConfiguration(this IServiceCollection services,IConfiguration configuration)
         {
-            //TODO
-            services.AddTransient<IntegrationEventRecordServiceFactory>(); 
+            services.AddTransient<IntegrationEventRecordServiceFactory>();
+            services.AddTransient<ILogLifeIntegrationEventService, LogLifeIntegrationEventService>();
 
             services.AddSingleton<IServiceBusPersisterConnection>(sp =>
             {
-                var connectionString = configuration["ConnectAzureServiceBus"];
+                var connectionString = configuration.GetSection("EventBusConnections")["ConnectAzureServiceBus"];
                 var logger = sp.GetService<ILogger<DefaultServiceBusPersisterConnection>>();
 
                 return new DefaultServiceBusPersisterConnection(connectionString, logger);
@@ -202,6 +224,9 @@ namespace Innemost.LogLife.API
                     options.Audience = "LogLife";
                 });
 
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IIdentityService, IdentityService>();
+
             return services;
         }
 
@@ -219,18 +244,68 @@ namespace Innemost.LogLife.API
 
         public static IServiceCollection AddCustomAutoMapper(this IServiceCollection services,IConfiguration configuration)
         {
-            services.AddAutoMapper(options =>
+            services.AddAutoMapper((sp, options) =>
             {
-                options.AddMaps(new Type[] { typeof(MusicDetailDTO), typeof(MusicDetail) });
+                var identityService = sp.GetService<IIdentityService>();
+
+                //options.AddMaps(new Type[] { typeof(MusicDetailDTO), typeof(MusicDetail) ,typeof(CreateOneRecordCommand),typeof(UpdateOneRecordCommand),typeof(LifeRecord) });
 
                 options.CreateMap<MusicDetailDTO, MusicDetail>();
 
                 options.CreateMap<CreateOneRecordCommand, LifeRecord>()
-                        .ForMember(dest => dest.TextType, options => options.MapFrom(src => TextType.GetFromId(src.TextType)))
-                        .ForMember(dest => dest.Location, options => options.MapFrom(src => new Location(src.Province, src.City, src.County, src.Town, src.Place)))
-                        .ForMember(dest => dest.PublishTime, options => options.MapFrom(src => DateTime.Parse(src.PublishTime)))
-                        .ForMember(dest => dest.MusicRecord, options => options.MapFrom(src => new MusicRecord(src.MusicName, src.Singer, src.Album) { Id = src.MusicId }))
-                        .ForMember(dest => dest.EmotionTags, options => options.MapFrom(src => src.EmotionTags.Select(e => EmotionTag.GetFromName(e))));
+                        .ConstructUsing(src => new LifeRecord(
+                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType), src.IsShared, src.Path,
+                            new Location(src.Province, src.City, src.County, src.Town, src.Place),
+                            new MusicRecord(src.MusicName, src.Singer, src.Album) { Id = src.MusicId },
+                            src.EmotionTags.Select(estr => EmotionTag.GetFromName(estr))
+                            ));
+
+                options.CreateMap<UpdateOneRecordCommand, LifeRecord>()
+                          .ConstructUsing(src => new LifeRecord(
+                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType), src.IsShared, src.Path,
+                            new Location(src.Province, src.City, src.County, src.Town, src.Place),
+                            new MusicRecord(src.MusicName, src.Singer, src.Album) { Id = src.MusicId },
+                            src.EmotionTags.Select(estr => EmotionTag.GetFromName(estr))
+                            ));
+            },Assembly.GetExecutingAssembly());
+
+            return services;
+        }
+
+        public static IServiceCollection AddQueriesAndRepositories(this IServiceCollection services,IConfiguration configuration)
+        {
+            var connectionString = configuration.GetConnectionString("ConnectMySQL");
+
+            services.AddScoped<ILifeRecordQueries, LifeRecordQueries>(sp => new LifeRecordQueries(connectionString));
+
+            services.AddScoped<ILifeRecordRepository, LifeRecordRepository>();
+
+            services.AddScoped<IRequestManager, RequestManager>();//这实际上也可以看做是一个 Repository
+
+            return services;
+        }
+
+        /// <summary>
+        /// 使Model验证错误时返回的信息更详细。
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddCustomConfig(this IServiceCollection services,IConfiguration configuration)
+        {
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = context =>
+                {
+                    var modelInvalidDetail = new ValidationProblemDetails(context.ModelState)
+                    {
+                        Status = StatusCodes.Status400BadRequest,
+                        Instance = context.HttpContext.Request.Path,
+                        Detail = "Please check error by error respone"
+                    };
+
+                    return new BadRequestObjectResult(modelInvalidDetail);
+                };
             });
 
             return services;

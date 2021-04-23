@@ -15,7 +15,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<LifeRecord> builder)
         {
-            builder.ToTable("LifeRecord",LifeRecordDbContext.SCHEMA);
+            builder.ToTable("LifeRecord");
 
             builder.Ignore(e => e.DomainEvents);
 
@@ -69,14 +69,14 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
                 
 
             builder
-                .HasOne<TextType>()
+                .HasOne(l=>l.TextType)
                 .WithMany()
                 .HasForeignKey("_textTypeId")
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired();
 
             builder
-                .HasOne<MusicRecord>()
+                .HasOne(l=>l.MusicRecord)
                 .WithMany()
                 .HasForeignKey("_musicRecordId")
                 .OnDelete(DeleteBehavior.NoAction)
