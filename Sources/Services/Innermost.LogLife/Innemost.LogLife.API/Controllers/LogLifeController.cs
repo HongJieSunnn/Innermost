@@ -78,7 +78,7 @@ namespace Innemost.LogLife.API.Controllers
             var record = await _lifeRecordQueries.FindRecordByRecordId(recordId);
 
             if (record == null)
-                return BadRequest("");
+                return BadRequest($"record with id {recordId} is not exsisted");
 
             return Ok(record);
         }
@@ -88,7 +88,7 @@ namespace Innemost.LogLife.API.Controllers
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        [Route("summary/{path:string}")]
+        [Route("summary/{path}")]
         [HttpGet]
         [ProducesResponseType(typeof(IEnumerable<RecordSummary>),(int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
@@ -166,7 +166,7 @@ namespace Innemost.LogLife.API.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{path:int}")]
+        [Route("delete/{path}")]
         [ProducesResponseType((int)HttpStatusCode.OK)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> DeleteRecordsByPathAsync(string path, [FromHeader(Name = "x-requestid")] string requestId)//TODO Add Attribute to ensure the path belongs to user who requests

@@ -30,7 +30,12 @@ try
 
     Log.Information("Applying migrations ({ApplicationContext})...", AppName);
     host.MigrateDbContext<PersistedGrantDbContext>((_, __) => { })
-        .MigrateDbContext<InnermostIdentityDbContext>((_, __) => { })
+        .MigrateDbContext<InnermostIdentityDbContext>((dbContext, services) => 
+        {
+            new InnermostIdentityDbContextSeed()
+                .SeedAsync(dbContext, configuration)
+                .Wait();
+        })
         .MigrateDbContext<ConfigurationDbContext>((dbContext, services) =>
         {
             //MigrateDbContext 是 IWebHost 的拓展函数，那么该函数可以使用调用它的 IWebHost 实例中的数据，这里就可以使用实例 host 中的数据

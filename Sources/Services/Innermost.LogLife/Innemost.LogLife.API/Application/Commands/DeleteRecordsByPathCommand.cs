@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Innemost.LogLife.API.Application.Commands
@@ -13,6 +14,7 @@ namespace Innemost.LogLife.API.Application.Commands
         [DataMember]
         public string Path { get;private set; }
 
+        [JsonConstructor]
         public DeleteRecordsByPathCommand(string path)
         {
             Path = path;

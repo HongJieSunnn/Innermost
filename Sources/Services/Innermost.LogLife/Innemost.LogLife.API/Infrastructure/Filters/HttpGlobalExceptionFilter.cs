@@ -11,7 +11,7 @@ namespace Innemost.LogLife.API.Infrastructure.Filters
         //TODO
         public void OnException(ExceptionContext context)
         {
-            throw new NotImplementedException();
+            
         }
     }
 }

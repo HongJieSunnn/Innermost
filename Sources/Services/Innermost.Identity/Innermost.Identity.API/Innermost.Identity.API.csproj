@@ -43,6 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\Configuration\" />
     <Folder Include="Migrations\PersistedGrant\" />
     <Folder Include="Migrations\User\" />
   </ItemGroup>

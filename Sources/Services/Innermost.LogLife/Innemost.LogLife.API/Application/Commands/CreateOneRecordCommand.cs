@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Innemost.LogLife.API.Application.Commands
@@ -52,6 +53,7 @@ namespace Innemost.LogLife.API.Application.Commands
             EmotionTags = new List<string>();
         }
 
+        [JsonConstructor]
         public CreateOneRecordCommand(string title, string text, int textType, bool isShared , string path ,
             string province,string city,string county,string town,string place,string publishTime,
             int musicId,string musicName,string singer,string album,IEnumerable<string> emotionTags):this()

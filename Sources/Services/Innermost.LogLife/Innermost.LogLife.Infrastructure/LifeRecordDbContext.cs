@@ -20,7 +20,7 @@ namespace Innermost.LogLife.Infrastructure
     {
         public DbSet<LifeRecord> LifeRecords { get; set; }
         public DbSet<TextType> TextTypes { get; set; }
-        public DbSet<EmotionTag> EmotionTags { get; set; }
+        //public DbSet<EmotionTag> EmotionTags { get; set; }
         public DbSet<ClientRequest> ClientRequests { get; set; }
 
         private readonly IMediator _mediator;
@@ -35,7 +35,7 @@ namespace Innermost.LogLife.Infrastructure
         {
             modelBuilder.ApplyConfiguration(new LifeRecordEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TextTypeEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new EmotionTagEntityTypeConfiguration());
+            //modelBuilder.ApplyConfiguration(new EmotionTagEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ClientRequestEntityTypeConfiguration());
         }
         /// <summary>

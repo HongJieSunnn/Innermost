@@ -16,7 +16,7 @@ namespace Innemost.LogLife.API.Queries
         private readonly string _connectionString = string.Empty;
         public LifeRecordQueries(string connectionString)
         {
-            _connectionString = string.IsNullOrWhiteSpace(connectionString) ? connectionString : throw new ArgumentNullException(nameof(connectionString));
+            _connectionString = string.IsNullOrWhiteSpace(connectionString) ? throw new ArgumentNullException(nameof(connectionString)) : connectionString;
         }
 
         public async Task<IEnumerable<string>> FindPathsOfUserByUserId(string userId)

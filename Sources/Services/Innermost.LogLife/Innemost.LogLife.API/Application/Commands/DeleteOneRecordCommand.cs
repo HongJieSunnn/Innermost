@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Innemost.LogLife.API.Application.Commands
@@ -12,6 +13,8 @@ namespace Innemost.LogLife.API.Application.Commands
     {
         [DataMember]
         public int Id { get; private set; }
+
+        [JsonConstructor]
         public DeleteOneRecordCommand(int id)
         {
             Id = id;

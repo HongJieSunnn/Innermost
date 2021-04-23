@@ -21,6 +21,7 @@ using Innermost.LogLife.Infrastructure;
 using Innermost.LogLife.Infrastructure.Idempotency;
 using Innermost.LogLife.Infrastructure.Repositories;
 using IntegrationEventRecord.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -217,11 +218,15 @@ namespace Innemost.LogLife.API
             var identityServerUrl = configuration["IdentityServerUrl"];
 
             services
-                .AddAuthentication()
+                .AddAuthentication(options=>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
                 .AddJwtBearer(options =>
                 {
                     options.Authority = identityServerUrl;
-                    options.Audience = "LogLife";
+                    options.Audience = "loglife";
                 });
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

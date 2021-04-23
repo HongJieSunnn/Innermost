@@ -17,9 +17,21 @@ namespace Innermost.Identity.API.Configuration
         {
             return new List<ApiResource>
             {
-                new ApiResource("loglife","LogLife Api"),
+                new ApiResource("loglife","LogLife Api")
+                {
+                    Scopes={"loglife"}
+                },
             };
         }
+
+        public static IEnumerable<ApiScope> GetApiScopes()
+        {
+            return new List<ApiScope>
+            {
+                new ApiScope("loglife"),
+            };
+        }
+
         /// <summary>
         /// Get IdentityResource like userID、Profile、email which needs to be protected.
         /// </summary>

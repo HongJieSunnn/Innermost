@@ -59,6 +59,15 @@ namespace Innermost.Identity.API.Data
                 }
                 await db.SaveChangesAsync();
             }
+
+            if (!db.ApiScopes.Any())
+            {
+                foreach (var scope in Config.GetApiScopes())
+                {
+                    db.ApiScopes.Add(scope.ToEntity());
+                }
+                await db.SaveChangesAsync();
+            }
         }
     }
 }
