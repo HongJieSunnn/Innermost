@@ -31,7 +31,7 @@ namespace Microsoft.AspNetCore.Hosting
         {
             var underK8S = webHost.IsInKubernetes();
 
-            using (var scope=webHost.Services.CreateScope())//从调用该方法的wenHost处获取服务
+            using (var scope=webHost.Services.CreateScope())//创建一个子容器,从调用该方法的wenHost处获取服务
             {
                 var services = scope.ServiceProvider;
                 var logger = services.GetService<ILogger<TContext>>();

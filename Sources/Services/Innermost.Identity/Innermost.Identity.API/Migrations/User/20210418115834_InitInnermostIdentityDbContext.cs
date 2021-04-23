@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Innermost.Identity.API.UserMigration
+namespace Innermost.Identity.API.Migrations.User
 {
-    public partial class initidentitydatabase : Migration
+    public partial class InitInnermostIdentityDbContext : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -35,6 +35,9 @@ namespace Innermost.Identity.API.UserMigration
                     City = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true),
                     SelfDescription = table.Column<string>(type: "varchar(150) CHARACTER SET utf8mb4", maxLength: 150, nullable: true, defaultValue: "Be Yourself"),
                     Birthday = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: true, defaultValue: "2000-01-01"),
+                    CreateTime = table.Column<DateTime>(type: "DATETIME", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    UpdateTime = table.Column<DateTime>(type: "DATETIME", nullable: false),
+                    DeleteTime = table.Column<DateTime>(type: "DATETIME", nullable: false),
                     UserName = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "varchar(256) CHARACTER SET utf8mb4", maxLength: 256, nullable: true),
@@ -48,10 +51,7 @@ namespace Innermost.Identity.API.UserMigration
                     TwoFactorEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(type: "datetime(6)", nullable: true),
                     LockoutEnabled = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false),
-                    CreateTime = table.Column<DateTime>(type: "DATETIME", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    UpdateTime = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    DeleteTime = table.Column<DateTime>(type: "DATETIME", nullable: false)
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

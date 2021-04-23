@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Innermost.Identity.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -134,10 +133,12 @@ namespace Innermost.Identity.API
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Innermost.Identity.API v1"));
             }
+            app.UseIdentityServer();
 
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

@@ -16,7 +16,7 @@ namespace Innermost.Identity.API.Models
         [Range(1,130,ErrorMessage ="Age must between 1 and 130")]
         public int Age { get; set; }
 
-        [RegularExpression(@"[MALE|FEMALE]{1}", ErrorMessage = "Error gender.Gender just only can be MALE or FEMALE")]
+        [RegularExpression(@"^MALE|FEMALE$", ErrorMessage = "Error gender.Gender just only can be MALE or FEMALE")]
         [Required,Column(TypeName = "VARCHAR(8)")]
         public string Gender { get; set; }
 

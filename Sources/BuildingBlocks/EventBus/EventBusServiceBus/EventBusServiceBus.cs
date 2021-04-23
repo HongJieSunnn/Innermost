@@ -193,9 +193,10 @@ namespace Innermost.EventBusServiceBus
                         }
                         else
                         {
-                            var handler = scope.ResolveOptional(subscription.HandlerType) as IDynamicIntegrationEventHandler;
+                            //得到 handler 实例->获取正确的泛型类型->正确的类型通过 handler 实例调用 Handle 函数。
+                            var handler = scope.ResolveOptional(subscription.HandlerType);
                             if (handler == null) continue;
-                            var eventType = _subscriptionManager.GetEventTypeByName(eventName);//因为模板实现的handler类需要对应事件的类型
+                            var eventType = _subscriptionManager.GetEventTypeByName(eventName);//因为模板实现的handler类需要对应事件的类型，通过Publish时发送的Json存储的EventName获得EventType，Body反序列化得到对应事件
                             var integrationEvent = JsonConvert.DeserializeObject(messageData, eventType);
                             var handlerConcreteType = typeof(IIntegrationEventHandler<>).MakeGenericType(eventType);//将对应事件的类型填入模板组成完整的handler类型
                             await (Task) handlerConcreteType.GetMethod("Handle").Invoke(handler, new object[] { integrationEvent });

@@ -2,45 +2,49 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <UserSecretsId>1b1a27b1-e8ce-44fc-8e95-686925d594f7</UserSecretsId>
+    <UserSecretsId>bcbc9aa7-a89b-427a-b0b0-361e31fd6d3f</UserSecretsId>
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    <DockerfileContext>..\..\..\..</DockerfileContext>
+    <GenerateErrorForMissingTargetingPacks>true</GenerateErrorForMissingTargetingPacks>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="5.0.1" />
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="7.1.0" />
-    <PackageReference Include="IdentityServer4" Version="4.1.1" />
-    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.1" />
-    <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.1" />
-    <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="4.1.1" />
-    <PackageReference Include="IdentityServer4.Storage" Version="4.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="5.0.3" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="5.0.3" NoWarn="NU1605" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.3" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.3">
+    <PackageReference Include="IdentityServer4" Version="4.1.2" />
+    <PackageReference Include="IdentityServer4.AspNetIdentity" Version="4.1.2" />
+    <PackageReference Include="IdentityServer4.EntityFramework" Version="4.1.2" />
+    <PackageReference Include="IdentityServer4.EntityFramework.Storage" Version="4.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Diagnostics.HealthChecks" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.HealthChecks" Version="1.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.5">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
-    <PackageReference Include="Polly" Version="7.2.1" />
-    <PackageReference Include="Serilog" Version="2.10.0" />
-    <PackageReference Include="Serilog.AspNetCore" Version="3.4.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.13" />
+    <PackageReference Include="Polly" Version="7.2.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
     <PackageReference Include="Serilog.Sinks.Http" Version="7.2.0" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.0.7" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Migrations\ConfigurationDb\" />
-    <Folder Include="Migrations\PersistedDb\" />
-    <Folder Include="Factories\" />
+    <ProjectReference Include="..\..\..\BuildingBlocks\WebHost\WebHost.Customization\WebHost.Customization.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\BuildingBlocks\WebHost\WebHost.Customization\WebHost.Customization.csproj" />
+    <Folder Include="Migrations\PersistedGrant\" />
+    <Folder Include="Migrations\User\" />
   </ItemGroup>
 
 </Project>

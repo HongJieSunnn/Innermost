@@ -1,5 +1,6 @@
 ﻿using Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate;
 using Innermost.SeedWork;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,37 +17,56 @@ namespace Innermost.LogLife.Infrastructure.Repositories
 
         public LifeRecord Add(LifeRecord lifeRecord)
         {
-            return _db.Add<LifeRecord>(lifeRecord).Entity;
+            return _db.Add<LifeRecord>(lifeRecord ?? throw new ArgumentNullException(nameof(lifeRecord))).Entity;
         }
 
-        public Task<LifeRecord> AddAsync(LifeRecord lifeRecord)
+        public async Task<LifeRecord> AddAsync(LifeRecord lifeRecord)
         {
-            throw new NotImplementedException();
-        }
-
-        public LifeRecord Delete(LifeRecord lifeRecord)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<LifeRecord> FindRecordByIdAsync(string id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<LifeRecord>> FindRecordsByPathAsync(string userId, string path)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<IEnumerable<LifeRecord>> FindRecordsByUserIdAsync(string userId)
-        {
-            throw new NotImplementedException();
+            var entity = await _db.AddAsync(lifeRecord ?? throw new ArgumentNullException(nameof(lifeRecord)));
+            return entity.Entity;
         }
 
         public LifeRecord Update(LifeRecord lifeRecord)
         {
-            throw new NotImplementedException();
+            return _db.Update(lifeRecord ?? throw new ArgumentNullException(nameof(lifeRecord))).Entity;
+        }
+
+        public LifeRecord Delete(LifeRecord lifeRecord)
+        {
+            return _db.Remove(lifeRecord??throw new ArgumentNullException(nameof(lifeRecord))).Entity;
+        }
+
+        public async Task<LifeRecord> GetRecordByIdAsync(int id)
+        {
+            var record = await _db.LifeRecords.FirstOrDefaultAsync(l=>l.Id==id);//eShopOnContainer直接Include了地址，但我感觉没必要，因为Include应该是所有的Location
+            
+            if(record==null)
+            {
+                record = _db.LifeRecords.Local.FirstOrDefault(l => l.Id == id);
+            }
+
+            if(record!=null)
+            {
+                await _db.Entry(record).Reference(l => l.Location).LoadAsync();
+                await _db.Entry(record).Reference(l => l.MusicRecord).LoadAsync();
+                await _db.Entry(record).Reference(l => l.TextType).LoadAsync();
+                await _db.Entry(record).Collection(l => l.EmotionTags).LoadAsync();
+            }
+
+            return record;
+        }
+
+        public IEnumerable<LifeRecord> DeleteRecordsUnderPath(string path)
+        {
+            var recordsUnderPath = _db.LifeRecords.Where(l => l.Path == path).ToList();
+
+            if(recordsUnderPath==null)
+            {
+                recordsUnderPath=_db.LifeRecords.Local.Where(l => l.Path == path).ToList();
+            }
+            _db.LifeRecords.RemoveRange(recordsUnderPath);
+
+            return recordsUnderPath;
         }
     }
 }

@@ -10,23 +10,36 @@ using System.Threading.Tasks;
 namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
 {
     public class LifeRecord
-        :Entity,IAggregateRoot
+        : Entity, IAggregateRoot
     {
         private string _userId;
-        public bool IsShared { get;private set; }
+        public string UserId => _userId;
         public string Title { get; private set; }
         public string Text { get; private set; }
-        public TextType TextType { get;private set; }
+        public TextType TextType { get; private set; }
+        public int TextTypeId => _textTypeId;
+        private int _textTypeId;
         public Location Location { get; private set; }
         public DateTime PublishTime { get; private set; }
-        public MusicRecord MusicRecord { get;private set; }
+        public MusicRecord MusicRecord { get; private set; }
+        public int MusicRecordId => _musicRecordId;
+        private int _musicRecordId;
         //public IEnumerable<Image> Images { get; set; }//TODO
-        public IEnumerable<EmotionTag> EmotionTags { get; set; }
+        public IEnumerable<EmotionTag> EmotionTags { get; private set; }
         /// <summary>
         /// Document Path.User can customer the loglife document structrue.
         /// </summary>
-        public string Path { get;private set; }
+        public string Path { get; private set; }
 
+        private bool _isShared;
+
+        private IEnumerable<dynamic> PropertiesCannotUpdateByUpdateOneRecordCommand()
+        {
+            yield return Id;
+            yield return Path;
+            yield return PublishTime;
+        }
+            
         protected LifeRecord()
         {
             EmotionTags = new List<EmotionTag>();
@@ -39,27 +52,33 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             Text = text;
             Path = path;
             TextType=textType;
-            IsShared = isShared;
+            _textTypeId = TextType.Id;
             Location = location;
             MusicRecord = musicRecord;//TODO 也许可以某些步骤来获取当前用户正在听的歌
+            _musicRecordId = MusicRecord.Id;
             EmotionTags = emotionTags;
+            _isShared = false;
+            if(isShared)
+            {
+                SetRecordShared();
+            }
         }
 
         public void SetRecordShared()
         {
-            if(IsShared==false)
+            if(!_isShared)
             {
                 AddDomainEvent(new ToMakeRecordSharedDomainEvent(this.Id));
-                IsShared = true;
+                _isShared = true;
             }
         }
 
         public void SetRecordPrivate()
         {
-            if (IsShared == true)
+            if(_isShared)
             {
                 AddDomainEvent(new ToMakeRecordPrivateDomainEvent(this.Id));
-                IsShared = false;
+                _isShared = false;
             }
         }
 
@@ -68,10 +87,19 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             if(!emotionTags.EqualList(this.EmotionTags))
             {
                 AddDomainEvent(new ToChangeEmotionTagsDomainEvent(this.Id));
+                EmotionTags = emotionTags;
             }
         }
 
-
+        public bool IsValidatedToUpdate(LifeRecord recordToUpdate)
+        {
+            var changeValidatedTag = this.PropertiesCannotUpdateByUpdateOneRecordCommand().SequenceEqual(recordToUpdate.PropertiesCannotUpdateByUpdateOneRecordCommand());
+            if (!changeValidatedTag)
+            {
+                return false;
+            }
+            return true;
+        }
 
         IEnumerable<EmotionTag> GetEmotionTagsByPrediction()
         {

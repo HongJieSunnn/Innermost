@@ -6,18 +6,18 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Innermost.Identity.API.UserMigration
+namespace Innermost.Identity.API.Migrations.User
 {
     [DbContext(typeof(InnermostIdentityDbContext))]
-    [Migration("20210128114533_init-identity-database")]
-    partial class initidentitydatabase
+    [Migration("20210418115834_InitInnermostIdentityDbContext")]
+    partial class InitInnermostIdentityDbContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Relational:MaxIdentifierLength", 64)
-                .HasAnnotation("ProductVersion", "5.0.0");
+                .HasAnnotation("ProductVersion", "5.0.5");
 
             modelBuilder.Entity("Innermost.Identity.API.Models.InnermostUser", b =>
                 {

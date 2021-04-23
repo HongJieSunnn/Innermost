@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+option csharp_namespace = "Innermost.GrpcMusicHub";
+
+package MusicHubApi;
+
+service MusicHubGrpc{
+	rpc GetMusicDetail(MusicRecordDTO) returns (MusicDetailDTO){}
+}
+
+message MusicRecordDTO{
+	int32 id=1;
+}
+
+message MusicDetailDTO{
+	string introduction=1;
+	string releaseTime=2;
+	repeated string tags=3;
+	//repeated SharedLifeRecordDTO relatedSharedRecords=4;
+}
+
+//TODO
+message SharedLifeRecordDTO{
+	string id=1;
+}
