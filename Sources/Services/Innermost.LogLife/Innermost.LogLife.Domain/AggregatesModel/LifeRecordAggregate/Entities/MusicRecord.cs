@@ -19,8 +19,24 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         public string Singer { get; private set; }
         public string Album { get; private set; }
 
-        public MusicRecord(string musicName,string singer,string album)
+        public MusicRecord(MusicRecord musicRecord)
         {
+            Id = musicRecord.Id;
+            MusicName = musicRecord.MusicName;
+            Singer = musicRecord.Singer;
+            Album = musicRecord.Album;
+        }
+
+        /// <summary>
+        /// 构造时就要传入Id，因为该Id一定对应MusicHub.Music
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="musicName"></param>
+        /// <param name="singer"></param>
+        /// <param name="album"></param>
+        public MusicRecord(int id,string musicName,string singer,string album)
+        {
+            Id = id;
             MusicName = musicName;
             Singer = singer;
             Album = album;

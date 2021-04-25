@@ -259,17 +259,15 @@ namespace Innemost.LogLife.API
 
                 options.CreateMap<CreateOneRecordCommand, LifeRecord>()
                         .ConstructUsing(src => new LifeRecord(
-                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType), src.IsShared, src.Path,
-                            new Location(src.Province, src.City, src.County, src.Town, src.Place),
-                            new MusicRecord(src.MusicName, src.Singer, src.Album) { Id = src.MusicId },
+                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType),
+                            src.LocationId,src.MusicId, src.IsShared, src.Path,DateTime.Parse(src.PublishTime),
                             src.EmotionTags.Select(estr => EmotionTag.GetFromName(estr))
                             ));
 
                 options.CreateMap<UpdateOneRecordCommand, LifeRecord>()
                           .ConstructUsing(src => new LifeRecord(
-                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType), src.IsShared, src.Path,
-                            new Location(src.Province, src.City, src.County, src.Town, src.Place),
-                            new MusicRecord(src.MusicName, src.Singer, src.Album) { Id = src.MusicId },
+                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType),
+                            src.LocationId,src.MusicId, src.IsShared, src.Path,DateTime.Parse(src.PublishTime),
                             src.EmotionTags.Select(estr => EmotionTag.GetFromName(estr))
                             ));
             },Assembly.GetExecutingAssembly());

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
 {
@@ -20,6 +21,8 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         public int TextTypeId => _textTypeId;
         private int _textTypeId;
         public Location Location { get; private set; }
+        private int _locationId;
+        [Column(TypeName = "DATETIME")]
         public DateTime PublishTime { get; private set; }
         public MusicRecord MusicRecord { get; private set; }
         public int MusicRecordId => _musicRecordId;
@@ -44,8 +47,8 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         {
             EmotionTags = new List<EmotionTag>();
         }
-
-        public LifeRecord(string userId,string title,string text, TextType textType, bool isShared=false,string path="/",Location location=null,MusicRecord musicRecord=null,IEnumerable<EmotionTag> emotionTags=null)
+        
+        public LifeRecord(string userId,string title,string text, TextType textType,int locationId,int musicRecordId, bool isShared=false,string path="/",DateTime publishTime=default(DateTime),IEnumerable<EmotionTag> emotionTags=null)
         {
             _userId = userId;
             Title = title;
@@ -53,9 +56,12 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
             Path = path;
             TextType=textType;
             _textTypeId = TextType.Id;
-            Location = location;
-            MusicRecord = musicRecord;//TODO 也许可以某些步骤来获取当前用户正在听的歌
-            _musicRecordId = MusicRecord.Id;
+            _locationId = locationId;
+
+            //musicRecordId 必定不为0，因为它一定是一首存在的音乐，不允许自定义。每次Innermost.MusicHub添加新音乐，就向Innermost.LogLife 的 MusicRecord Table 添加一条记录。
+            _musicRecordId = musicRecordId;//TODO 也许可以某些步骤来获取当前用户正在听的歌
+
+            PublishTime = publishTime==default(DateTime)?DateTime.Now:publishTime;
             EmotionTags = emotionTags;
             _isShared = false;
             if(isShared)

@@ -9,4 +9,8 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\SeedWork\Innermost.SeedWork\Innermost.SeedWork.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="AggregatesModel\LifeRecordAggregate\ValueObjects\" />
+  </ItemGroup>
+
 </Project>

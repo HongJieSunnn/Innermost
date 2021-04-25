@@ -22,25 +22,11 @@ namespace Innemost.LogLife.API.Application.Commands
         [Range(1, 2)]
         public int TextType { get; private set; }
         [DataMember]
-        public string Province { get; private set; }
-        [DataMember]
-        public string City { get; private set; }
-        [DataMember]
-        public string County { get; private set; }
-        [DataMember]
-        public string Town { get; private set; }
-        [DataMember]
-        public string Place { get; private set; }
+        public int LocationId { get; private set; }
         [DataMember]
         public string PublishTime { get; private set; }
         [DataMember]
         public int MusicId { get; private set; }
-        [DataMember]
-        public string MusicName { get; private set; }
-        [DataMember]
-        public string Singer { get; private set; }
-        [DataMember]
-        public string Album { get; private set; }
         public IEnumerable<string> EmotionTags { get; private set; }
         [DataMember]
         public string Path { get; private set; }
@@ -53,9 +39,7 @@ namespace Innemost.LogLife.API.Application.Commands
         }
 
         [JsonConstructor]
-        public UpdateOneRecordCommand(int id, string title, string text, int textType, bool isShared, string path,
-            string province, string city, string county, string town, string place, string publishTime,
-            int musicId, string musicName, string singer, string album, IEnumerable<string> emotionTags):this()
+        public UpdateOneRecordCommand(int id, string title, string text, int textType, bool isShared, string path, string publishTime,int musicId, IEnumerable<string> emotionTags):this()
         {
             Id = id;
             Title = title;
@@ -63,16 +47,8 @@ namespace Innemost.LogLife.API.Application.Commands
             Path = path;
             TextType = textType;
             IsShared = isShared;
-            Province = province;
-            City = city;
-            County = county;
-            Town = town;
-            Place = place;
             PublishTime = publishTime;
             MusicId = musicId;
-            MusicName = musicName;
-            Singer = singer;
-            Album = album;
             EmotionTags = emotionTags;
         }
     }

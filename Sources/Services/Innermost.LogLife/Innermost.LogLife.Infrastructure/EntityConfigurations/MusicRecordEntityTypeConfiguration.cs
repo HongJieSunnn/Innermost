@@ -23,19 +23,19 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
             builder
                 .Property(m => m.MusicName)
                 .HasColumnName("MusicName")
-                .HasMaxLength(200)
+                .HasMaxLength(50)
                 .IsRequired();
 
             builder
                 .Property(m => m.Singer)
-                .HasColumnName("MusicName")
-                .HasMaxLength(200)
+                .HasColumnName("Singer")       
+                .HasMaxLength(50)
                 .IsRequired();
 
             builder
                 .Property(m => m.Album)
-                .HasColumnName("MusicName")
-                .HasMaxLength(200)
+                .HasColumnName("Album")
+                .HasMaxLength(50)
                 .IsRequired();
         }
     }

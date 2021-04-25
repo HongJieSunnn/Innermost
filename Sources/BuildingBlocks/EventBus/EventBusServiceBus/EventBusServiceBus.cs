@@ -231,6 +231,8 @@ namespace Innermost.EventBusServiceBus
                     await _serviceBusProcessor.CloseAsync();
                 }
                 await _serviceBusProcessor.DisposeAsync();
+
+                _disposed = true;
             }
             catch (IOException ex)
             {

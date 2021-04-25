@@ -1,6 +1,7 @@
 ﻿using Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,11 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
 
             builder.HasKey(l => l.Id);
 
+            //TODO add indexs to the columns always be searched.
+            builder.HasIndex(l => l.Path);
+
+            builder.HasIndex(l => l.PublishTime);
+
             builder
                 .Property(l => l.Title)
                 .HasColumnName("Title")
@@ -31,17 +37,22 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
 
             builder
                 .Property(l => l.Text)
+                .HasCharSet(CharSet.Utf8Mb4)
                 .HasColumnName("Text")
                 .HasMaxLength(3000)
                 .IsRequired();
 
             builder
-                .OwnsOne(l => l.Location, loc =>
-                {
-                    loc.Property<int>("LifeRecordId");
-                    loc.HasKey("LifeRecordId");
-                    loc.WithOwner().HasForeignKey("LifeRecordId");
-                });
+                .Property("_locationId")
+                .HasColumnName("LocationId")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .IsRequired();
+
+            builder
+                .Property(l => l.PublishTime)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnName("PublishTime")
+                .IsRequired();
 
             builder
                 .Property<int>("_musicRecordId")
@@ -73,6 +84,13 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
                 .WithMany()
                 .HasForeignKey("_textTypeId")
                 .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired();
+
+            builder
+                .HasOne(l => l.Location)
+                .WithMany()
+                .HasForeignKey("_locationId")
+                .OnDelete(DeleteBehavior.NoAction)
                 .IsRequired();
 
             builder

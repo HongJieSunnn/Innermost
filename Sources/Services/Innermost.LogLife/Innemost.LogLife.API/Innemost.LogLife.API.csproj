@@ -59,4 +59,6 @@
     <Protobuf Include="..\..\Innermost.MusicHub\Innermost.MusicHub.API\Grpc\Proto\musichub.proto" GrpcServices="Client" />
   </ItemGroup>
 
+  <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+
 </Project>

@@ -42,10 +42,4 @@
     <ProjectReference Include="..\..\..\BuildingBlocks\WebHost\WebHost.Customization\WebHost.Customization.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\Configuration\" />
-    <Folder Include="Migrations\PersistedGrant\" />
-    <Folder Include="Migrations\User\" />
-  </ItemGroup>
-
 </Project>

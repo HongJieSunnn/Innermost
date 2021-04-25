@@ -35,6 +35,23 @@ namespace Innermost.Identity.API.Data
                     Birthday="2000-08-26",
                     CreateTime=DateTime.Now,
                     PhoneNumber="18506013757",
+                },
+                new InnermostUser()
+                {
+                    UserName="Tester",
+                    NormalizedUserName="TESTER",
+                    Email="Test@Innermost.com",
+                    NormalizedEmail="Test@Innermost.com".ToUpper(),
+                    Age=16,
+                    Gender="FEMALE",
+                    NickName="TestLover",
+                    School="No.1 Middle School of Lianjiang",
+                    Province="福建省",
+                    City="福州市",
+                    SelfDescription="I am Tester for Innermsot",
+                    Birthday="2004-08-27",
+                    CreateTime=DateTime.Now,
+                    PhoneNumber="12345678901",
                 }
             };
         }

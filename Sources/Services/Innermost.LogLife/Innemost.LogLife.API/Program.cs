@@ -1,4 +1,5 @@
 using Innemost.LogLife.API;
+using Innemost.LogLife.API.Infrastructure.SeedDatas;
 using Innermost.LogLife.Infrastructure;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -23,7 +24,12 @@ try
     var host = CreateWebHostBuilder(configuration, args);
 
     Log.Information("Applying migrations ({ApplicationContext})...", Program.AppName);
-    host.MigrateDbContext<LifeRecordDbContext>((_,__)=> { });
+    host.MigrateDbContext<LifeRecordDbContext>((context,service)=>
+    {
+        new LifeRecordDbContextSeed()
+            .SeedAsync(context,configuration)
+            .Wait();
+    });
 
     Log.Information("Starting web host ({ApplicationContext})...", Program.AppName);
     host.Run();

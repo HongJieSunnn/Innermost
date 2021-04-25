@@ -42,9 +42,9 @@ namespace Innemost.LogLife.API.Application.IntegrationEvents.ToMakeRecordShared
             Title = title;
             Text = text;
             TextType = TextType.GetFromId(textType.Id);
-            Location = new Location(location.Province, location.City, location.County, location.Town, location.Place);
+            Location = new Location(location);
             PublishTime = publishTime;
-            MusicRecord = new MusicRecord(musicRecord.MusicName, musicRecord.Singer, musicRecord.Album);
+            MusicRecord = new MusicRecord(musicRecord);
             EmotionTags = new List<EmotionTag>();
             while (emotionTags.GetEnumerator().MoveNext())
             {

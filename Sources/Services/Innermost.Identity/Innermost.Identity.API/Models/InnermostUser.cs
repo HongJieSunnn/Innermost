@@ -42,7 +42,7 @@ namespace Innermost.Identity.API.Models
         public DateTime CreateTime { get; set; }
 
         [Column(TypeName ="DATETIME")]
-        public DateTime UpdateTime { get; set; }
+        public DateTime UpdateTime { get; set; }//Default value is 0001-01-01 00:00:00 which is same as defalut value of DateTime type.
 
         [Column(TypeName = "DATETIME")]
         public DateTime DeleteTime { get; set; }
