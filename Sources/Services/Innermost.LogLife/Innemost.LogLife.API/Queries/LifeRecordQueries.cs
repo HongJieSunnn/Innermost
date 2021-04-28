@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Innemost.LogLife.API.Models;
 using Innemost.LogLife.API.Queries.Model;
+using Innemost.LogLife.API.Queries.Models;
 
 namespace Innemost.LogLife.API.Queries
 {
@@ -41,23 +42,32 @@ namespace Innemost.LogLife.API.Queries
             {
                 connection.Open();
 
-                var recordTask=connection.QueryFirstOrDefaultAsync<LifeRecord>(
-                    @"SELECT l.id,l.Title,l.Text,l.TextTypeId,
-                        l.Location_Province,l.Location_City,l.Location_County,l.Location_Town,l.Location_Place,
-                        l.PublishTime,l.MusicRecordId
+                var recordTask = connection.QueryFirstOrDefaultAsync<dynamic>(
+                    @"SELECT l.Id,l.Title,l.Text,l.Path,l.PublishTime,l.IsShared,
+                        lo.Province,lo.City,lo.County,lo.Town,lo.Place,
+                        m.MusicName,m.Singer,m.Album,
+                        t.TextTypeName
                         FROM LifeRecord l
-                        WHERE l.id=@id"
-                    , new { id=id }
+                        INNER JOIN Location lo ON l.LocationId=lo.Id
+                        INNER JOIN MusicRecord m ON l.MusicRecordId=m.Id
+                        INNER JOIN TextType t ON l.TextTypeId=t.Id
+                        WHERE l.Id=@id"
+                    ,
+                    param: new { id = id }
                     );
                 //TODO
-                var record = await recordTask;
-                return record;
+                var dynamicRecords = await recordTask;
+
+                if (dynamicRecords == null)
+                    return null;
+
+                return QueryModelMapper.MapLifeRecordQueryModel(dynamicRecords);
             }
         }
 
         public Task<IEnumerable<LifeRecord>> FindRecordsByEmotionTagsAsync(string userId, IEnumerable<int> emotionTagIds)
         {
-            //TODO 将标签系统放到Redis中
+            //TODO 将标签系统放到MongoDB中
             //using (var conn=new MySqlConnection(_connectionString))
             //{
             //    conn.Open();
@@ -88,17 +98,25 @@ namespace Innemost.LogLife.API.Queries
             {
                 connection.Open();
 
-                var recordsTask= connection.QueryAsync<LifeRecord>(
-                    @"SELECT l.id,l.Title,l.Text,l.TextTypeId,
-                        l.Location_Province,l.Location_City,l.Location_County,l.Location_Town,l.Location_Place,
-                        l.PublishTime,l.MusicRecordId
+                var recordsTask= connection.QueryAsync<dynamic>(
+                    @"SELECT l.Id,l.Title,l.Text,l.Path,l.PublishTime,l.IsShared,
+                        lo.Province,lo.City,lo.County,lo.Town,lo.Place,
+                        m.MusicName,m.Singer,m.Album,
+                        t.TextTypeName
                         FROM LifeRecord l
-                        WHERE l.Path=@path AND l.UserId=@userId"
+                        INNER JOIN Location lo ON l.LocationId=lo.Id
+                        INNER JOIN MusicRecord m ON l.MusicRecordId=m.Id
+                        INNER JOIN TextType t ON l.TextTypeId=t.Id
+                        WHERE l.UserId=@userId AND l.Path=@path"
                     , new {path=path,userId=userId}
                     );
                 //TODO 去Redis找EmotionTags、去MongoDB找图片
-                var records = await recordsTask;
-                return records;
+                var dynamicRecords = await recordsTask;
+
+                if (dynamicRecords == null)
+                    return null;
+
+                return QueryModelMapper.MapLifeRecordQueryModel(dynamicRecords);
             }
         }
 
@@ -111,17 +129,26 @@ namespace Innemost.LogLife.API.Queries
             {
                 connection.Open();
 
-                var records= await connection.QueryAsync<LifeRecord>(
-                    @"SELECT l.id,l.Title,l.Text,l.TextTypeId,
-                        l.Province,l.City,l.County,l.Town,l.Place,
-                        l.PublishTime,l.MusicRecordId
+                var recordsTask= connection.QueryAsync<LifeRecord>(
+                    @"SELECT l.Id,l.Title,l.Text,l.Path,l.PublishTime,l.IsShared,
+                        lo.Province,lo.City,lo.County,lo.Town,lo.Place,
+                        m.MusicName,m.Singer,m.Album,
+                        t.TextTypeName
                         FROM LifeRecord l
-                        WHERE l.DateTime>=@startTime AND l.DateTime<=@endTime
-                        AND l.UserId=@userId"
+                        INNER JOIN Location lo ON l.LocationId=lo.Id
+                        INNER JOIN MusicRecord m ON l.MusicRecordId=m.Id
+                        INNER JOIN TextType t ON l.TextTypeId=t.Id
+                        WHERE l.UserId=@userId
+                        AND l.DateTime>=@startTime AND l.DateTime<=@endTime"
                     , new { startTime = startTime,endTime=endTime, userId = userId }
                     );
+
+                var dynamicRecords = await recordsTask;
                 //TODO 去Redis找EmotionTags、去MongoDB找图片
-                return records;
+                if (dynamicRecords == null)
+                    return null;
+
+                return QueryModelMapper.MapLifeRecordQueryModel(dynamicRecords);
             }
         }
 
@@ -131,22 +158,35 @@ namespace Innemost.LogLife.API.Queries
             {
                 connetion.Open();
 
-                var recordsBeforeGrouping = await connetion.QueryAsync<LifeRecord>(
-                    @"SELECT l.id,l.Title,l.Text,l.TextTypeId,
-                        l.Province,l.City,l.County,l.Town,l.Place,
-                        l.PublishTime,l.MusicRecordId
+                var recordsBeforeGroupingTask = connetion.QueryAsync<LifeRecord>(
+                    @"SELECT l.Id,l.Title,l.Text,l.Path,l.PublishTime,l.IsShared,
+                        lo.Province,lo.City,lo.County,lo.Town,lo.Place,
+                        m.MusicName,m.Singer,m.Album,
+                        t.TextTypeName
                         FROM LifeRecord l
+                        INNER JOIN Location lo ON l.LocationId=lo.Id
+                        INNER JOIN MusicRecord m ON l.MusicRecordId=m.Id
+                        INNER JOIN TextType t ON l.TextTypeId=t.Id
                         WHERE l.UserId=@userId"
                     , new {userId = userId }
                 );
+                var dynamicRecords = await recordsBeforeGroupingTask;
                 //TODO 去Redis找EmotionTags、去MongoDB找图片
+                if (dynamicRecords == null)
+                    return null;
 
-                var records = recordsBeforeGrouping.GroupBy(l => l.Path);
+                var records = QueryModelMapper.MapLifeRecordQueryModel(dynamicRecords);
 
-                return records;
+                return records.GroupBy(l => l.Path);
             }
         }
 
+        /// <summary>
+        /// 貌似没啥用，因为不存在path，一定不会有对应的record
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public async Task<bool> IsPathExistedAsync(string userId, string path)
         {
             using (var connection=new MySqlConnection(_connectionString))

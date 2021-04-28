@@ -10,11 +10,11 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
     public class Location
         : Entity
     {
-        public string Province { get; set; }
-        public string City { get; set; }
-        public string County { get; set; }
-        public string Town { get; set; }
-        public string Place { get; set; }
+        public string Province { get;private set; }
+        public string City { get; private set; }
+        public string County { get; private set; }
+        public string Town { get; private set; }
+        public string Place { get; private set; }
 
         public Location()
         {

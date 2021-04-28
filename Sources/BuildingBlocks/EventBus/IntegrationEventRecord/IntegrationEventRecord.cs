@@ -23,7 +23,10 @@ namespace IntegrationEventRecord
         [NotMapped]
         public IntegrationEvent IntegrationEvent { get;private set; }
 
+        private IntegrationEventRecord()
+        {
 
+        }
 
         public IntegrationEventRecord(IntegrationEvent @event,Guid transactionId)
         {

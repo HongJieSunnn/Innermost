@@ -21,6 +21,7 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         public int TextTypeId => _textTypeId;
         private int _textTypeId;
         public Location Location { get; private set; }
+        public int LocationId => _locationId;
         private int _locationId;
         [Column(TypeName = "DATETIME")]
         public DateTime PublishTime { get; private set; }
@@ -47,24 +48,23 @@ namespace Innermost.LogLife.Domain.AggregatesModel.LifeRecordAggregate
         {
             EmotionTags = new List<EmotionTag>();
         }
-        
-        public LifeRecord(string userId,string title,string text, TextType textType,int locationId,int musicRecordId, bool isShared=false,string path="/",DateTime publishTime=default(DateTime),IEnumerable<EmotionTag> emotionTags=null)
+
+        public LifeRecord(string userId,string title,string text, int textTypeId,int locationId,int musicRecordId, bool isShared=false,string path="",DateTime publishTime=default(DateTime),IEnumerable<EmotionTag> emotionTags=null)
         {
-            _userId = userId;
-            Title = title;
-            Text = text;
+            _userId = userId??throw new ArgumentNullException(nameof(userId));
+            Title = title??"";
+            Text = text ?? throw new ArgumentNullException(nameof(text));
             Path = path;
-            TextType=textType;
-            _textTypeId = TextType.Id;
+            _textTypeId = textTypeId;
             _locationId = locationId;
 
             //musicRecordId 必定不为0，因为它一定是一首存在的音乐，不允许自定义。每次Innermost.MusicHub添加新音乐，就向Innermost.LogLife 的 MusicRecord Table 添加一条记录。
             _musicRecordId = musicRecordId;//TODO 也许可以某些步骤来获取当前用户正在听的歌
 
-            PublishTime = publishTime==default(DateTime)?DateTime.Now:publishTime;
+            PublishTime = publishTime == default(DateTime) ? DateTime.Now : publishTime;
             EmotionTags = emotionTags;
-            _isShared = false;
-            if(isShared)
+            _isShared = isShared;
+            if (isShared)
             {
                 SetRecordShared();
             }

@@ -14,7 +14,10 @@ namespace Innermost.LogLife.Infrastructure.Repositories
     {
         private readonly LifeRecordDbContext _db;
         public IUnitOfWork UnitOfWork => _db;
-
+        public LifeRecordRepository(LifeRecordDbContext context)
+        {
+            _db = context;
+        }
         public LifeRecord Add(LifeRecord lifeRecord)
         {
             return _db.Add<LifeRecord>(lifeRecord ?? throw new ArgumentNullException(nameof(lifeRecord))).Entity;
@@ -22,7 +25,7 @@ namespace Innermost.LogLife.Infrastructure.Repositories
 
         public async Task<LifeRecord> AddAsync(LifeRecord lifeRecord)
         {
-            var entity = await _db.AddAsync(lifeRecord ?? throw new ArgumentNullException(nameof(lifeRecord)));
+            var entity = await _db.LifeRecords.AddAsync(lifeRecord ?? throw new ArgumentNullException(nameof(lifeRecord)));
             return entity.Entity;
         }
 

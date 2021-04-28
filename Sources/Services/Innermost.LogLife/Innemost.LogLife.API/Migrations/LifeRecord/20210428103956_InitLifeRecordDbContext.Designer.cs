@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Innemost.LogLife.API.Migrations
+namespace Innemost.LogLife.API.Migrations.LifeRecord
 {
     [DbContext(typeof(LifeRecordDbContext))]
-    [Migration("20210425143957_InitLifeRecordDbContext")]
+    [Migration("20210428103956_InitLifeRecordDbContext")]
     partial class InitLifeRecordDbContext
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,7 @@ namespace Innemost.LogLife.API.Migrations
                         .IsRequired()
                         .ValueGeneratedOnAdd()
                         .HasColumnType("varchar(95) CHARACTER SET utf8mb4")
-                        .HasDefaultValue("/记录时刻")
+                        .HasDefaultValue("Memories")
                         .HasColumnName("Path");
 
                     b.Property<DateTime>("PublishTime")
@@ -65,6 +65,12 @@ namespace Innemost.LogLife.API.Migrations
                     b.Property<int>("_textTypeId")
                         .HasColumnType("int")
                         .HasColumnName("TextTypeId");
+
+                    b.Property<string>("_userId")
+                        .IsRequired()
+                        .HasMaxLength(95)
+                        .HasColumnType("varchar(95) CHARACTER SET utf8mb4")
+                        .HasColumnName("UserId");
 
                     b.HasKey("Id");
 
@@ -162,7 +168,8 @@ namespace Innemost.LogLife.API.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .HasMaxLength(15)
+                        .HasColumnType("varchar(15) CHARACTER SET utf8mb4")
                         .HasColumnName("TextTypeName");
 
                     b.HasKey("Id");

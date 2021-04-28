@@ -12,13 +12,18 @@ namespace Innemost.LogLife.API.Infrastructure.SeedDatas
     {
         public async Task SeedAsync(LifeRecordDbContext context,IConfiguration configuration)
         {
-            var seeders = GetDefaultLifeRecords();
-            var locations = GetDefaultLocations();
-            var musicRecords = GetDefaultMusicRecord();
-
+            List<LifeRecord> seeders = new List<LifeRecord>();
+            if (!context.LifeRecords.Any())
+                seeders = GetDefaultLifeRecords();
+            var locations = GetDefaultLocations().Where(l => !context.Locations.Contains(l));
+            var musicRecords = GetDefaultMusicRecord().Where(l => !context.MusicRecords.Contains(l));
+            //Location MusicRecord TextType 都不能够随 LifeRecord 添加到数据库，否则会出现冲突。
+            //所以需要额外对它们进行添加，添加一条 LifeRecord 时只添加对应的 Id
             await context.Locations.AddRangeAsync(locations);
             await context.LifeRecords.AddRangeAsync(seeders);
             await context.MusicRecords.AddRangeAsync(musicRecords);
+            if(!context.TextTypes.Any())
+                await context.TextTypes.AddRangeAsync(TextType.TextTypeEnumerable);
 
             await context.SaveChangesAsync();
         }
@@ -28,13 +33,13 @@ namespace Innemost.LogLife.API.Infrastructure.SeedDatas
             return new List<LifeRecord>
             {
                 new LifeRecord(
-                    "HongJieSun","Test for article","I am HongJieSun.This is my default test text of an article.😋",
-                    TextType.Article,1,13,false,"/TestArticle",DateTime.Now),
+                    "","Test for article","I am HongJieSun.This is my default test text of an article.😋",
+                    TextType.Article.Id,1,13,false,"TestArticle",DateTime.Now),
                 new LifeRecord(
-                    "HongJieSun","Test for essay","I am HongJieSun.This is my default test text of an essay.🤯",
-                    TextType.Essay,2,12,false,"/TestEssay",DateTime.Now),
+                    "","Test for essay","I am HongJieSun.This is my default test text of an essay.🤯",
+                    TextType.Essay.Id,2,12,false,"TestEssay",DateTime.Now),
                 new LifeRecord(
-                    "HongJieSun","HongJieSun's Mine","等好多年后你问我为什么会跟你在一起 我希望我的回答一定会是很简单的:" +
+                    "","HongJieSun's Mine","等好多年后你问我为什么会跟你在一起 我希望我的回答一定会是很简单的:" +
                     "我遇到了你 然后喜欢上了你 没有什么其他奇怪的要求 爱情不就该这么简单吗 我喜欢你你也喜欢我就够了 我真的很渴望这样的爱情 " +
                     "它太简单了 简单到我们甚至不愿意承认这样的爱情真的存在 也许只能在动漫里 让我们向往一下而已 可我真的 太羡慕动漫里的情节了 " +
                     "他们就是 我遇到了你 我喜欢你 仅此而已 我不知道青春是不是已经从高中毕业了的我身边溜走了 如果不是我真的希望我可以在青春还没溜走的现在 " +
@@ -47,7 +52,7 @@ namespace Innemost.LogLife.API.Infrastructure.SeedDatas
                     " 相当于天黑了 但我喜欢你 不管怎样我都是喜欢你的 天再黑海浪也不会停的 一样的 我对你的喜欢也不会停 我依然会像海浪一样 因为我喜欢你 不管是\"白天\"还是\"黑夜\" 我都是喜欢你的 " +
                     "也许这是该多考虑的 人的心情不可能时时相同 但某个信念 或者说是某些烙印在心里的东西是不会变的 唉 我总是这样 太爱写一些 想一些太美好的事 但是人都是向往美好的 不是吗 喜欢你也是件美好的事 " +
                     "只是人不可能每时每刻都处在美好的环境下 我必须得等 而我现在只能羡慕 也许也在告诉自己 不要让你让青春溜走 保持自己的观点:两个人 我喜欢你 你也喜欢我 就够了 就是美好的事 就是让我向往的事",
-                    TextType.Article,1,12,false,"/TestArticle",DateTime.Now),
+                    TextType.Article.Id,1,12,false,"TestArticle/SubArticle",DateTime.Now),
             };
         }
 

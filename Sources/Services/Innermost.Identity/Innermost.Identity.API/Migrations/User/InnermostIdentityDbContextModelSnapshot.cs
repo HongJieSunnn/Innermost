@@ -32,11 +32,13 @@ namespace Innermost.Identity.API.Migrations.User
 
                     b.Property<string>("Birthday")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .HasMaxLength(10)
+                        .HasColumnType("varchar(10) CHARACTER SET utf8mb4")
                         .HasDefaultValue("2000-01-01");
 
                     b.Property<string>("City")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
@@ -84,13 +86,15 @@ namespace Innermost.Identity.API.Migrations.User
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasMaxLength(11)
+                        .HasColumnType("varchar(11) CHARACTER SET utf8mb4");
 
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("tinyint(1)");
 
                     b.Property<string>("Province")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+                        .HasMaxLength(30)
+                        .HasColumnType("varchar(30) CHARACTER SET utf8mb4");
 
                     b.Property<string>("School")
                         .HasMaxLength(80)

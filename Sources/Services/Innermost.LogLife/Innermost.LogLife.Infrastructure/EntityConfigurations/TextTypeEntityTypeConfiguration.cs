@@ -27,6 +27,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
             builder
                 .Property(t => t.Name)
                 .HasColumnName("TextTypeName")
+                .HasMaxLength(15)
                 .IsRequired();
         }
     }

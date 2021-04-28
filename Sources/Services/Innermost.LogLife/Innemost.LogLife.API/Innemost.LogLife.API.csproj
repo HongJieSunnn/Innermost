@@ -8,6 +8,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Infrastructure\DbContextSeeds\**" />
+    <Compile Remove="Infrastructure\Migrations\**" />
+    <Content Remove="Infrastructure\DbContextSeeds\**" />
+    <Content Remove="Infrastructure\Migrations\**" />
+    <EmbeddedResource Remove="Infrastructure\DbContextSeeds\**" />
+    <EmbeddedResource Remove="Infrastructure\Migrations\**" />
+    <None Remove="Infrastructure\DbContextSeeds\**" />
+    <None Remove="Infrastructure\Migrations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AspNetCore.HealthChecks.AzureServiceBus" Version="5.0.2" />
     <PackageReference Include="AspNetCore.HealthChecks.MySql" Version="5.0.1" />
     <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="5.0.1" />
@@ -42,9 +53,7 @@
 
   <ItemGroup>
     <Folder Include="Application\IntegrationEventHandlers\" />
-    <Folder Include="Infrastructure\Migrations\" />
-    <Folder Include="Infrastructure\DbContextSeeds\" />
-    <Folder Include="Migrations\" />
+    <Folder Include="Migrations\IntegrationEventRecord\" />
   </ItemGroup>
 
   <ItemGroup>

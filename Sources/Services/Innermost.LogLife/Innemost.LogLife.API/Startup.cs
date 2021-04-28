@@ -20,6 +20,7 @@ using Innermost.LogLife.Domain.Events;
 using Innermost.LogLife.Infrastructure;
 using Innermost.LogLife.Infrastructure.Idempotency;
 using Innermost.LogLife.Infrastructure.Repositories;
+using IntegrationEventRecord;
 using IntegrationEventRecord.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -36,6 +37,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -173,6 +175,18 @@ namespace Innemost.LogLife.API
                         });
                 });
 
+            services
+                .AddDbContext<IntegrationEventRecordDbContext>(options =>
+                {
+                    options
+                        .UseMySql(configuration.GetConnectionString("ConnectMySQL"), new MySqlServerVersion(new Version(5, 7)), options =>
+                        {
+                            options.MigrationsAssembly(typeof(Startup).GetTypeInfo().Assembly.GetName().Name);
+
+                            options.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
+                        });
+                });
+
             //TODO redis/mongodb/log
 
             return services;
@@ -215,6 +229,8 @@ namespace Innemost.LogLife.API
 
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services,IConfiguration configuration)
         {
+            JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Remove("sub");
+
             var identityServerUrl = configuration["IdentityServerUrl"];
 
             services
@@ -258,18 +274,22 @@ namespace Innemost.LogLife.API
                 options.CreateMap<MusicDetailDTO, MusicDetail>();
 
                 options.CreateMap<CreateOneRecordCommand, LifeRecord>()
-                        .ConstructUsing(src => new LifeRecord(
-                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType),
-                            src.LocationId,src.MusicId, src.IsShared, src.Path,DateTime.Parse(src.PublishTime),
-                            src.EmotionTags.Select(estr => EmotionTag.GetFromName(estr))
-                            ));
+                        .IgnoreAllPropertiesWithAnInaccessibleSetter()
+                        .ConstructUsing((src,resolution) => new LifeRecord(
+                                identityService.GetUserId(), src.Title, src.Text, src.TextTypeId,
+                                src.LocationId, src.MusicRecordId, src.IsShared, src.Path, DateTime.Now,
+                                src.EmotionTags?.Select(estr => EmotionTag.GetFromName(estr))
+                                )
+                        );
 
                 options.CreateMap<UpdateOneRecordCommand, LifeRecord>()
-                          .ConstructUsing(src => new LifeRecord(
-                            identityService.GetUserId(), src.Title, src.Text, TextType.GetFromId(src.TextType),
-                            src.LocationId,src.MusicId, src.IsShared, src.Path,DateTime.Parse(src.PublishTime),
-                            src.EmotionTags.Select(estr => EmotionTag.GetFromName(estr))
-                            ));
+                        .IgnoreAllPropertiesWithAnInaccessibleSetter()
+                        .ConstructUsing((src, resolution) => new LifeRecord(
+                            identityService.GetUserId(), src.Title, src.Text, src.TextTypeId,
+                            src.LocationId, src.MusicRecordId, src.IsShared, src.Path, DateTime.Now,
+                            src.EmotionTags?.Select(estr => EmotionTag.GetFromName(estr))
+                            )
+                        );
             },Assembly.GetExecutingAssembly());
 
             return services;

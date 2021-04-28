@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace Innemost.LogLife.API.Migrations
+namespace Innemost.LogLife.API.Migrations.LifeRecord
 {
     public partial class InitLifeRecordDbContext : Migration
     {
@@ -59,7 +59,7 @@ namespace Innemost.LogLife.API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false, defaultValue: 1),
-                    TextTypeName = table.Column<string>(type: "longtext CHARACTER SET utf8mb4", nullable: false)
+                    TextTypeName = table.Column<string>(type: "varchar(15) CHARACTER SET utf8mb4", maxLength: 15, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -79,8 +79,9 @@ namespace Innemost.LogLife.API.Migrations
                     LocationId = table.Column<int>(type: "int", nullable: false),
                     PublishTime = table.Column<DateTime>(type: "DATETIME", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
                     MusicRecordId = table.Column<int>(type: "int", nullable: false),
-                    Path = table.Column<string>(type: "varchar(95) CHARACTER SET utf8mb4", nullable: false, defaultValue: "/记录时刻"),
-                    IsShared = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                    Path = table.Column<string>(type: "varchar(95) CHARACTER SET utf8mb4", nullable: false, defaultValue: "Memories"),
+                    IsShared = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    UserId = table.Column<string>(type: "varchar(95) CHARACTER SET utf8mb4", maxLength: 95, nullable: false)
                 },
                 constraints: table =>
                 {

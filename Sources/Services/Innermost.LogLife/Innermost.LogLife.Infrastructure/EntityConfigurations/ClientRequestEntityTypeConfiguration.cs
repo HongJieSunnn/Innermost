@@ -20,7 +20,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
 
             builder.Property(c => c.Name).IsRequired();
 
-            builder.Property(c => c.Time).IsRequired();
+            builder.Property(c => c.Time).HasColumnType("DATETIME").IsRequired();
         }
     }
 }

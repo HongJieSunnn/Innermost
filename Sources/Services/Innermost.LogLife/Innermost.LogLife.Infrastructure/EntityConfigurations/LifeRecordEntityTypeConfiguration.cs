@@ -30,6 +30,13 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
             builder.HasIndex(l => l.PublishTime);
 
             builder
+                .Property("_userId")
+                .UsePropertyAccessMode(PropertyAccessMode.Field)
+                .HasColumnName("UserId")
+                .HasMaxLength(95)
+                .IsRequired();
+
+            builder
                 .Property(l => l.Title)
                 .HasColumnName("Title")
                 .HasMaxLength(200)
@@ -62,7 +69,7 @@ namespace Innermost.LogLife.Infrastructure.EntityConfigurations
 
             builder
                 .Property(l => l.Path)
-                .HasDefaultValue("/记录时刻")
+                .HasDefaultValue("Memories")
                 .HasColumnName("Path")
                 .IsRequired();
 

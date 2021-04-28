@@ -88,11 +88,11 @@ namespace Innemost.LogLife.API.Controllers
         /// </summary>
         /// <param name="path"></param>
         /// <returns></returns>
-        [Route("summary/{path}")]
+        [Route("summary")]
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<RecordSummary>),(int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(IEnumerable<LifeRecord>),(int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<IEnumerable<RecordSummary>>> GetRecordsSummaryByPathAsync(string path)
+        public async Task<ActionResult<IEnumerable<LifeRecord>>> GetRecordsSummaryByPathAsync(string path)
         {
             var userId = _identityService.GetUserId();
 
@@ -100,8 +100,7 @@ namespace Innemost.LogLife.API.Controllers
 
             if (records == null)
             {
-                var pathIsExisted = await _lifeRecordQueries.IsPathExistedAsync(userId,path);
-                return pathIsExisted ? Ok(new List<RecordSummary>()) : NotFound($"{path} of User {userId} is not existed.");
+                return NotFound($"{path} of User {userId} is not existed.");
             }
 
             return Ok(records);
@@ -109,14 +108,14 @@ namespace Innemost.LogLife.API.Controllers
 
         [Route("summary/time")]
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<RecordSummary>), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<IEnumerable<RecordSummary>>> GetRecordsSummaryByPublishTimeAsync([FromBody]DateTimeToFind dateTimeToFind)
+        [ProducesResponseType(typeof(IEnumerable<LifeRecord>), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<IEnumerable<LifeRecord>>> GetRecordsSummaryByPublishTimeAsync([FromBody]DateTimeToFind dateTimeToFind)
         {
             var userId = _identityService.GetUserId();
 
             var records = await _lifeRecordQueries.FindRecordsByPublishTimeAsync(userId, dateTimeToFind);
 
-            return records==null?Ok(records):Ok(new List<RecordSummary>());
+            return records==null?Ok(records):Ok(new List<LifeRecord>());
         }
 
         [Route("update")]

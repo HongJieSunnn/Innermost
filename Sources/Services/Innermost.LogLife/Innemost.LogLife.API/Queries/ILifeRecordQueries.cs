@@ -16,6 +16,5 @@ namespace Innemost.LogLife.API.Queries
         Task<IEnumerable<LifeRecord>> FindRecordsByEmotionTagsAsync(string userId, IEnumerable<int> emotionTagIds);
         Task<IEnumerable<LifeRecord>> FindRecordsByKeywordAsync(string userId, string keyword);
         Task<IEnumerable<string>> FindPathsOfUserByUserId(string userId);
-        Task<bool> IsPathExistedAsync(string userId, string path);
     }
 }

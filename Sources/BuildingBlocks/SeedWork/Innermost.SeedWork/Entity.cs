@@ -24,7 +24,7 @@ namespace Innermost.SeedWork
         /// MediatR.Inotification 通知，也就是发布订阅中的事件
         /// </summary>
         private List<INotification> _domainEvents;
-        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents.AsReadOnly();
+        public IReadOnlyCollection<INotification> DomainEvents => _domainEvents?.AsReadOnly();
         public void AddDomainEvent(INotification eventItem)
         {
             _domainEvents = _domainEvents ?? new List<INotification>();

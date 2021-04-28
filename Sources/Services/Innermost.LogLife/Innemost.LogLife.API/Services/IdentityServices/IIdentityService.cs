@@ -8,5 +8,6 @@ namespace Innemost.LogLife.API.Services.IdentityServices
     public interface IIdentityService
     {
         string GetUserId();
+        string GetUserName();//TODO
     }
 }

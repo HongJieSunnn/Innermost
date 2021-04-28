@@ -1,6 +1,7 @@
 using Innemost.LogLife.API;
 using Innemost.LogLife.API.Infrastructure.SeedDatas;
 using Innermost.LogLife.Infrastructure;
+using IntegrationEventRecord;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -24,12 +25,13 @@ try
     var host = CreateWebHostBuilder(configuration, args);
 
     Log.Information("Applying migrations ({ApplicationContext})...", Program.AppName);
-    host.MigrateDbContext<LifeRecordDbContext>((context,service)=>
+    host.MigrateDbContext<LifeRecordDbContext>((context, service) =>
     {
         new LifeRecordDbContextSeed()
-            .SeedAsync(context,configuration)
+            .SeedAsync(context, configuration)
             .Wait();
-    });
+    })
+        .MigrateDbContext<IntegrationEventRecordDbContext>((_, __) => { });
 
     Log.Information("Starting web host ({ApplicationContext})...", Program.AppName);
     host.Run();

@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <Folder Include="AggregatesModel\LifeRecordAggregate\ValueObjects\" />
+    <Folder Include="AggregatesModel\LifeRecordAggregate\ValueObjects\" />
   </ItemGroup>
 
 </Project>
